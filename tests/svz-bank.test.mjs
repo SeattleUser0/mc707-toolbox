@@ -127,3 +127,51 @@ test('SVZ banks: a folder saved from the Sound browser is a bank of its tones', 
   assert.deepEqual(r.names.sort(), ['Alpha', 'Bravo']);
   assert.deepEqual(errors, []);
 });
+
+/* a project file with just enough for the reader: PRJ5, a section table, the clip tone bank (8 x 17) and
+   the 64 user tones; everything else zero */
+const PROJECT = `const PRJA = 0x100, prjSize = 0x3112f0 + 136 * FW_REC, USRA = PRJA + prjSize;
+  const u8 = new Uint8Array(USRA + 0x10 + 64 * FW_REC);
+  const put = (o, t) => [...t].forEach((c, i) => (u8[o + i] = c.charCodeAt(0)));
+  const p32 = (o, x) => new DataView(u8.buffer).setUint32(o, x, true);
+  put(2, 'PRJ5'); put(0x10, 'PRJaMC77'); p32(0x18, PRJA); p32(0x1c, prjSize);
+  put(0x20, 'USRaMC77'); p32(0x28, USRA); p32(0x2c, 0x10 + 64 * FW_REC);
+  put(PRJA + 0x10, 'My Show');
+  const slot = (t, k, rec) => u8.set(rec, PRJA + 0x3112f0 + (t * 17 + k) * FW_REC);
+  const user = (n, rec) => u8.set(rec, USRA + 0x10 + n * FW_REC);
+  const rec = t => fwRecord(t.snd, new Uint8Array(FW_REC));`;
+
+test('SVZ banks: a saved project becomes a bank, records copied as saved', async () => {
+  const { page, errors } = await openApp();
+  const r = await page.evaluate(`(() => { ${MAKE} ${PROJECT}
+    const lead = rec(tone(1)); lead[18] = 240; lead[45] = 100; /* phrase bytes, as MC-707 projects hold them */
+    const wide = rec(tone(2)); wide[330] = 64;                   /* a pan one above Roland's range, as saved */
+    slot(0, 0, lead); slot(0, 3, lead); slot(0, 16, lead);       /* one tone in three slots */
+    slot(2, 5, wide);
+    slot(3, 0, rec(tone(900, { 'PMT.PMT2_PTL_SW': 1, 'PTL1.WAV_GTYPE': 2, 'PTL1.WAV_NUM_L': 7 })));
+    slot(4, 0, rec({ snd: newSound('tone') }));                  /* Roland's initial tone: skipped */
+    user(0, rec(tone(3)));
+    const p = S.svzProjectTones(u8);
+    const out = S.svzBanksOf(p.tones, p.project);
+    const back = S.svzRead(out.files[0].bytes).records;
+    return { project: p.project, where: p.tones.map(t => t.where), files: out.files.map(f => [f.file, f.count]),
+      merged: out.merged, leftOut: out.leftOut, phrase: [back[0][18], back[0][45]], pan: back[1][330],
+      notProject: S.svzProjectTones(new Uint8Array(100)) };
+  })()`);
+  assert.equal(r.project, 'My Show');
+  assert.deepEqual(r.where, [
+    'track 1 clip 1',
+    'track 1 clip 4',
+    'track 1 track sound',
+    'track 3 clip 6',
+    'track 4 clip 1',
+    'user tone 1'
+  ]);
+  assert.deepEqual(r.files, [['MYSHOW.SVZ', 3]]);
+  assert.equal(r.merged, 2, 'the tone in three slots is written once');
+  assert.deepEqual(r.leftOut, [{ name: 'T900', why: 'partial 2 plays user sample 7' }]);
+  assert.deepEqual(r.phrase, [240, 100], 'reserved phrase bytes kept');
+  assert.equal(r.pan, 64, 'an out-of-range value kept as saved');
+  assert.equal(r.notProject, null);
+  assert.deepEqual(errors, []);
+});

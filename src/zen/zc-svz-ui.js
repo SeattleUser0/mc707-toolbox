@@ -1,12 +1,13 @@
 // Export tones from the Sound browser as MC-707 tone bank files (.svz): a folder, the picked sounds, or
-// one sound. The files go to the computer's downloads; copy them to the SD card's ROLAND/SOUND folder and
+// one sound. Or make banks straight from saved MC-707 projects (.mpj), one bank per project, the tone
+// records copied as the MC-707 saved them. The files go to the computer's downloads; copy them to the SD card's ROLAND/SOUND folder and
 // load a tone on the MC-707 with SOUND > SOUND FILE. Loading one into a clip changes only its sound.
 //
 // Reads: ZS (through the entries it is given). Calls up the layers through hooks (core/hooks.js).
-import { toast } from '../core/dom.js';
+import { el, toast } from '../core/dom.js';
 import { hooks } from '../core/hooks.js';
 import { soundOf } from './zc-sounds.js';
-import { SVZ_MAX, svzBanks } from './zc-svz.js';
+import { SVZ_MAX, svzBanks, svzBanksOf, svzProjectTones } from './zc-svz.js';
 
 /**
  * Save library entries as bank files named after `name`. Kits and anything that is not a tone are
@@ -25,8 +26,13 @@ export async function exportSvz(entries, name) {
       return { name: e.name, snd };
     });
   if (!tones.length) return (toast('Only tones go in a .svz bank; there are none here'), 0);
-  const { files, leftOut, merged } = svzBanks(tones, name);
-  if (!files.length) return (toast('Every one of these tones plays a user sample, so there is nothing to save'), 0);
+  return saveBanks(svzBanks(tones, name));
+}
+
+/* save the files of a bank set and say what went in */
+async function saveBanks({ files, leftOut, merged }, label = '') {
+  if (!files.length)
+    return (toast(label + (label ? 'e' : 'E') + 'very tone plays a user sample, so there is nothing to save'), 0);
   let saved = 0;
   for (const f of files) if (await hooks.saveFile(f.file, new Blob([f.bytes]))) saved++;
   const n = files.reduce((a, f) => a + f.count, 0),
@@ -37,7 +43,7 @@ export async function exportSvz(entries, name) {
     ].filter(Boolean);
   if (saved)
     toast(
-      'Saved ' +
+      (label ? label + 'saved ' : 'Saved ') +
         n +
         ' tone' +
         (n === 1 ? '' : 's') +
@@ -45,4 +51,38 @@ export async function exportSvz(entries, name) {
         '. Copy to ROLAND/SOUND on the SD card.'
     );
   return saved;
+}
+
+/**
+ * Ask for MC-707 project files (.mpj, copied off the SD card) and save one tone bank per project,
+ * named after the project. Every named tone of its clips, track sounds and user tones goes in, copied
+ * byte for byte; the same rules as a folder export (128 a file, duplicates once, sample tones out).
+ */
+export function projectBanks() {
+  const inp = el('input', { type: 'file', accept: '.mpj,.MPJ', multiple: true, style: 'display:none' });
+  inp.onchange = async () => {
+    const files = [...(inp.files || [])];
+    inp.remove();
+    for (const f of files) {
+      let p = null;
+      try {
+        p = svzProjectTones(new Uint8Array(await f.arrayBuffer()));
+      } catch (e) {
+        p = null;
+      }
+      if (!p) {
+        toast(f.name + ' is not an MC-707 project');
+        continue;
+      }
+      if (!p.tones.length) {
+        toast(f.name + ' has no named tones');
+        continue;
+      }
+      /* named after the file, as the MC-707 names the project (the name inside can carry a save number) */
+      const stem = f.name.replace(/\.mpj$/i, '');
+      await saveBanks(svzBanksOf(p.tones, stem), stem + ': ');
+    }
+  };
+  document.body.append(inp);
+  inp.click();
 }

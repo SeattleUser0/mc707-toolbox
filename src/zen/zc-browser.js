@@ -17,7 +17,7 @@ import { askDlg } from '../ui/dialogs.js';
 import { starterMenu } from './zc-starters-more.js';
 import { ZE, audition, zeLoad, zenClose } from './zc-editor.js';
 import { factoryItems } from './zc-factory-ui.js';
-import { exportSvz } from './zc-svz-ui.js';
+import { exportSvz, projectBanks } from './zc-svz-ui.js';
 import {
   CAT_GROUPS,
   bankName,
@@ -560,7 +560,11 @@ function toolbar() {
             { label: 'All 16 clips of track ' + devNum(ZE.t), action: () => grab('track') },
             { label: 'Every clip of every track', action: () => grab('all') },
             ...(ZE.kind === 'tone'
-              ? ['-', ...factoryItems((n, bank) => (n && (B.bank = bank || 'factory'), render()))]
+              ? [
+                  '-',
+                  ...factoryItems((n, bank) => (n && (B.bank = bank || 'factory'), render())),
+                  { label: 'Tone banks (.svz) from MC-707 project files…', action: projectBanks }
+                ]
               : [])
           ]
         ),

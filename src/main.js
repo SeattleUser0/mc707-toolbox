@@ -187,7 +187,16 @@ import { songSections } from './zen/zc-scenes.js';
 import { scanOnce, scanDiff, scanReset, sceneFinderOpen } from './zen/zc-scan.js';
 import { ZS, libraryJSON } from './zen/zc-sounds.js';
 import { FW_REC, fwFields, fwKitBytes, fwKits, fwRecord, fwTone, fwTones } from './zen/zc-factory.js';
-import { SVZ_MAX, svzBanks, svzBuild, svzNeedsSample, svzRead, svzTones } from './zen/zc-svz.js';
+import {
+  SVZ_MAX,
+  svzBanks,
+  svzBanksOf,
+  svzBuild,
+  svzNeedsSample,
+  svzProjectTones,
+  svzRead,
+  svzTones
+} from './zen/zc-svz.js';
 import { newSound } from './zen/zc-tone.js';
 import { hooks } from './core/hooks.js';
 import { finishLibrary } from './library/pools.js';
@@ -314,7 +323,7 @@ PROJ.t = projTitle;
       libraryJSON,
       slotAddr,
       fw: { FW_REC, fwFields, fwKits, fwKitBytes, fwTone, fwTones, fwRecord, newSound },
-      svz: { SVZ_MAX, svzBanks, svzBuild, svzNeedsSample, svzRead, svzTones },
+      svz: { SVZ_MAX, svzBanks, svzBanksOf, svzBuild, svzNeedsSample, svzProjectTones, svzRead, svzTones },
       get ZE() {
         return ZE;
       },

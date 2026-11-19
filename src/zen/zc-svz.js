@@ -18,9 +18,13 @@
 // Container layout and checks from github.com/SeattleUser0/mc707-svz (MIT), whose container logic came
 // from FANTOM Librarian (github.com/blackjid/fantom-librarian, MIT).
 //
+// Banks can also come straight from saved projects (.mpj): every tone in its 8 x 17 clip slots and its 64
+// user tones, records copied byte for byte (the reserved phrase bytes too, which SysEx cannot read).
+//
 // Owns nothing. Reads nothing. Pure functions.
 import { CRC_T } from '../core/crc.js';
-import { FW_REC, fwRecord, fwTone } from './zc-factory.js';
+import { mpjSections } from '../core/mpj.js';
+import { FW_REC, fwFields, fwRecord, fwTone } from './zc-factory.js';
 
 /** Most tones in one bank: the largest size tested on an MC-707. */
 export const SVZ_MAX = 128;
@@ -133,7 +137,7 @@ export function svzTones(b) {
   for (const r of records) {
     const snd = fwTone(r, 0),
       name = snd && snd.v['CMN.NAME'];
-    if (!snd || !name || /^init tone$/i.test(name)) skipped++;
+    if (!snd || !name || /^init ?tone$/i.test(name)) skipped++;
     else tones.push({ name, snd });
   }
   return { tones, skipped, problems };
@@ -159,6 +163,18 @@ export function svzNeedsSample(snd) {
   return out;
 }
 
+/* the values a sample check needs, read straight from a record (no range check: projects can hold
+   a value just outside Roland's range, which fwTone refuses) */
+const SAMPLE_KEYS = /^(PTL\d\.WAV_GTYPE|PTL\d\.WAV_NUM_L|PMT\.PMT\d_PTL_SW|SPTL\d\.OSC_TYPE|CMN\.NAME)$/;
+function sampleValues(r) {
+  const v = {};
+  for (const [k, o, t] of fwFields())
+    if (SAMPLE_KEYS.test(k))
+      v[k] =
+        t === 'a' ? String.fromCharCode(...r.subarray(o, o + 16)).trimEnd() : t === 'w' ? r[o] | (r[o + 1] << 8) : r[o];
+  return { v };
+}
+
 /* a name the MC-707's sound file browser shows: up to 8 letters and digits, upper case */
 const stemOf = s =>
   (
@@ -176,24 +192,35 @@ const stemOf = s =>
  * @param {boolean} [withSamples=false]  keep tones that play a user sample
  */
 export function svzBanks(list, name, withSamples = false) {
+  return svzBanksOf(
+    list.map(t => ({ name: t.name, record: fwRecord(t.snd, new Uint8Array(FW_REC)) })),
+    name,
+    withSamples
+  );
+}
+
+/**
+ * Bank files from tone records as they are ([{name, record}]): the same rules as svzBanks, with the
+ * records copied byte for byte.
+ */
+export function svzBanksOf(list, name, withSamples = false) {
   const leftOut = [],
     seen = new Set(),
     records = [];
   let merged = 0;
-  for (const { name: nm, snd } of list) {
-    const why = svzNeedsSample(snd);
+  for (const { name: nm, record } of list) {
+    const why = svzNeedsSample(sampleValues(record));
     if (why.length && !withSamples) {
       leftOut.push({ name: nm, why: why.join(', ') });
       continue;
     }
-    const r = fwRecord(snd, new Uint8Array(FW_REC)),
-      key = r.join(',');
+    const key = record.join(',');
     if (seen.has(key)) {
       merged++;
       continue;
     }
     seen.add(key);
-    records.push(r);
+    records.push(record);
   }
   const stem = stemOf(name),
     files = [];
@@ -204,4 +231,32 @@ export function svzBanks(list, name, withSamples = false) {
     files.push({ file: file + '.SVZ', bytes: svzBuild(part), count: part.length });
   }
   return { files, leftOut, merged };
+}
+
+/**
+ * The named tones a saved project holds, in order: its 8 tracks x 17 slots (16 clips, then the track's
+ * own sound), then its 64 user tones. [{name, record, where}], records copied as saved. Blank slots and
+ * Roland's initial tone (INIT TONE, or InitTone in the user bank) are skipped. {project, tones}; null when the file is not an MC-707 project.
+ * @param {Uint8Array} u8
+ */
+export function svzProjectTones(u8) {
+  const sec = mpjSections(u8);
+  if (!sec) return null;
+  const P = sec.PRJa.at,
+    tones = [],
+    nameOf = o =>
+      String.fromCharCode(...u8.subarray(o, o + 16))
+        .replace(/[\0\xff]+$/, '')
+        .trimEnd();
+  const take = (o, where) => {
+    if (o + FW_REC > u8.length) return;
+    const name = nameOf(o);
+    if (!name || /^init ?tone$/i.test(name)) return;
+    tones.push({ name, record: u8.slice(o, o + FW_REC), where });
+  };
+  for (let t = 0; t < 8; t++)
+    for (let k = 0; k < 17; k++)
+      take(P + 0x3112f0 + (t * 17 + k) * FW_REC, 'track ' + (t + 1) + (k === 16 ? ' track sound' : ' clip ' + (k + 1)));
+  if (sec.USRa) for (let n = 0; n < 64; n++) take(sec.USRa.at + 0x10 + n * FW_REC, 'user tone ' + (n + 1));
+  return { project: nameOf(P + 0x10), tones };
 }
