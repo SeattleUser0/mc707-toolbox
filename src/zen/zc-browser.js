@@ -17,6 +17,7 @@ import { askDlg } from '../ui/dialogs.js';
 import { starterMenu } from './zc-starters-more.js';
 import { ZE, audition, zeLoad, zenClose } from './zc-editor.js';
 import { factoryItems } from './zc-factory-ui.js';
+import { exportSvz } from './zc-svz-ui.js';
 import {
   CAT_GROUPS,
   bankName,
@@ -436,6 +437,7 @@ function rowMenu(e, x, y) {
       action: () => ((B.cat = catOf(e)), (B.group = ''), render())
     },
     { label: 'Show its bank', action: () => ((B.bank = bankOf(e)), render()) },
+    e.kind === 'tone' ? { label: 'Save as a .svz tone bank…', action: () => exportSvz([e], e.name) } : null,
     '-',
     { label: 'Copy to', sub: targets(f => copyTo([e], f)) },
     editable(e) ? { label: 'Move to', sub: targets(f => moveTo([e], f)) } : null,
@@ -467,6 +469,7 @@ function manyMenu(list, x, y) {
     '-',
     { label: 'Copy to', sub: targets(f => copyTo(list, f)) },
     own.length ? { label: 'Move to', sub: targets(f => moveTo(list, f)) } : null,
+    ZE.kind === 'tone' ? { label: 'Save as a .svz tone bank…', action: () => exportSvz(list, 'TONES') } : null,
     own.length ? { label: 'Delete…', danger: true, action: () => deleteMany(list) } : null
   ]);
 }
@@ -622,6 +625,12 @@ function banksPane(all) {
             }
           }
         },
+        ZE.kind === 'tone'
+          ? {
+              label: 'Save the folder as a .svz tone bank…',
+              action: () => exportSvz(filterList(all, { ...B, bank: 'u:' + f, group: '', cat: '', tag: '', q: '' }), f)
+            }
+          : null,
         {
           label: 'Remove the folder…',
           danger: true,

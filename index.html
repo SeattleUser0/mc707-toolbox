@@ -11131,12 +11131,12 @@ html.os-darwin.native-menu #menubar .mproj {
   function saveNow() {
     saveT = 0;
     {
-      const text2 = JSON.stringify(S);
+      const text3 = JSON.stringify(S);
       const backed = !!(HOST && HOST.backupWrite);
-      if (backed && !BACKUP.hold) HOST.backupWrite(text2).catch(() => {
+      if (backed && !BACKUP.hold) HOST.backupWrite(text3).catch(() => {
       });
       try {
-        localStorage.setItem(STORE, text2);
+        localStorage.setItem(STORE, text3);
         scheduleSave.warned = false;
       } catch (e) {
         if (!scheduleSave.warned) {
@@ -19654,10 +19654,10 @@ html.os-darwin.native-menu #menubar .mproj {
     X: ["#...#", ".#.#.", "..#..", ".#.#.", "#...#"]
   };
   var four = (g) => g === GLYPH.B ? ["##.", "###", "#.#", "##."] : [g[0], g[1], g[3], g[4]];
-  function demoPixels(text2 = DEMO_TEXT, h = 5) {
+  function demoPixels(text3 = DEMO_TEXT, h = 5) {
     const rows2 = Array.from({ length: h }, () => []);
     let first = true;
-    for (const ch of text2) {
+    for (const ch of text3) {
       if (ch === " ") {
         rows2.forEach((r) => r.push(false, false));
         continue;
@@ -31892,8 +31892,8 @@ html.os-darwin.native-menu #menubar .mproj {
     folders: folderList(),
     list: ZS.list.filter((e) => e.src !== "factory").map(({ h, cat, ...e }) => e)
   });
-  async function libraryImport(text2) {
-    const o = JSON.parse(text2);
+  async function libraryImport(text3) {
+    const o = JSON.parse(text3);
     if (!o || o.sounds !== 1 || !Array.isArray(o.list)) throw new Error("not a sound library");
     let added = 0, same = 0;
     if (Array.isArray(o.folders)) o.folders.forEach((f) => typeof f === "string" && folderAdd(f));
@@ -32249,10 +32249,10 @@ html.os-darwin.native-menu #menubar .mproj {
   };
   async function showWhy(why, t, k2) {
     const lines = ZX.log.slice(0, 12).reverse();
-    const text2 = why + ". Asked for track " + devNum(t) + " clip " + (k2 + 1) + " at " + hexAddr(paramAddr(t, k2)) + " (step settings) and " + hexAddr(stepAddr(t, k2, 0)) + " (step 1). The last SysEx messages (→ sent, ← received):\n" + (lines.length ? lines.join("\n") : "(none)");
-    if (await askDlg({ title: "Reading the clip’s notes did not work", text: text2, ok: "Copy and close", cancel: "Close" }))
+    const text3 = why + ". Asked for track " + devNum(t) + " clip " + (k2 + 1) + " at " + hexAddr(paramAddr(t, k2)) + " (step settings) and " + hexAddr(stepAddr(t, k2, 0)) + " (step 1). The last SysEx messages (→ sent, ← received):\n" + (lines.length ? lines.join("\n") : "(none)");
+    if (await askDlg({ title: "Reading the clip’s notes did not work", text: text3, ok: "Copy and close", cancel: "Close" }))
       try {
-        await navigator.clipboard.writeText(text2);
+        await navigator.clipboard.writeText(text3);
         toast("Copied: paste it into a problem report");
       } catch (e) {
       }
@@ -32611,8 +32611,8 @@ html.os-darwin.native-menu #menubar .mproj {
     );
     document.body.append(box);
     return {
-      set: (text2, f) => {
-        line.textContent = text2;
+      set: (text3, f) => {
+        line.textContent = text3;
         fill2.style.width = Math.round(Math.max(0, Math.min(1, f)) * 100) + "%";
       },
       get cancelled() {
@@ -32749,7 +32749,7 @@ html.os-darwin.native-menu #menubar .mproj {
     const plan0 = songPlan();
     if (!plan0.length) return toast("The song has no patterns to send");
     const body = el("div", { class: "scRows" }), scBody = el("div", { class: "scScenes" });
-    const tick = (text2, on3) => el("label", { class: "cwOpt" }, el("input", { type: "checkbox", checked: on3 }), " " + text2);
+    const tick = (text3, on3) => el("label", { class: "cwOpt" }, el("input", { type: "checkbox", checked: on3 }), " " + text3);
     const repl = tick("Replace the notes in clips that have some", false), named = tick("Name each clip after its pattern", true), clipsToo = tick("Send the clips too (untick when they are already on the MC-707)", true);
     const draw2 = () => {
       body.textContent = "";
@@ -33203,11 +33203,11 @@ html.os-darwin.native-menu #menubar .mproj {
       "Add to results"
     );
     const row2 = (...kids) => el("div", { class: "mtRow" }, ...kids);
-    const step = (n, title, text2, ...kids) => el(
+    const step = (n, title, text3, ...kids) => el(
       "section",
       { class: "mtStep" },
       el("b", {}, el("span", { class: "mtNum" }, String(n)), title),
-      ...(Array.isArray(text2) ? text2 : [text2]).map((t) => typeof t === "string" ? el("p", { class: "hint" }, t) : t),
+      ...(Array.isArray(text3) ? text3 : [text3]).map((t) => typeof t === "string" ? el("p", { class: "hint" }, t) : t),
       ...kids
     );
     const ov = el(
@@ -39962,6 +39962,136 @@ html.os-darwin.native-menu #menubar .mproj {
     }
   }
 
+  // src/core/crc.js
+  var CRC_T = (() => {
+    const t = [];
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k2 = 0; k2 < 8; k2++) c = c & 1 ? 3988292384 ^ c >>> 1 : c >>> 1;
+      t[n] = c >>> 0;
+    }
+    return t;
+  })();
+
+  // src/zen/zc-svz.js
+  var SVZ_MAX = 128;
+  var STAMP = [75, 89, 48, 49, 57, 36];
+  var crc32 = (b) => {
+    let c = 4294967295;
+    for (let i = 0; i < b.length; i++) c = CRC_T[(c ^ b[i]) & 255] ^ c >>> 8;
+    return (c ^ 4294967295) >>> 0;
+  };
+  var u32 = (b, o) => (b[o] | b[o + 1] << 8 | b[o + 2] << 16 | b[o + 3] << 24) >>> 0;
+  var put32 = (b, o, x) => {
+    for (let i = 0; i < 4; i++) b[o + i] = x >>> 8 * i & 255;
+  };
+  var text = (b, o, n) => String.fromCharCode(...b.subarray(o, o + n));
+  function area(records, size) {
+    const n = records.length, info = 16 + 4 * n, out2 = new Uint8Array(info + n * size);
+    put32(out2, 0, n);
+    put32(out2, 4, size);
+    put32(out2, 8, info);
+    records.forEach((r, i) => {
+      put32(out2, 16 + 4 * i, crc32(r));
+      out2.set(r, info + i * size);
+    });
+    return out2;
+  }
+  function svzBuild(records) {
+    if (!records.length) throw new Error("a bank needs at least one tone");
+    if (records.length > SVZ_MAX) throw new Error("more than " + SVZ_MAX + " tones in one bank");
+    const areas = [
+      ["DIFa", area([new Uint8Array(32)], 32)],
+      ["PATa", area(records, FW_REC)]
+    ];
+    const head3 = 16 + 16 * areas.length, out2 = new Uint8Array(head3 + areas.reduce((n, [, b]) => n + b.length, 0));
+    out2.set([83, 86, 90, 97, areas.length, areas.length, ...STAMP]);
+    let at2 = head3;
+    areas.forEach(([tag, body], i) => {
+      const e = 16 + 16 * i;
+      out2.set(
+        [...tag, ..."ZCOR"].map((c) => c.charCodeAt(0)),
+        e
+      );
+      put32(out2, e + 8, at2);
+      put32(out2, e + 12, body.length);
+      out2.set(body, at2);
+      at2 += body.length;
+    });
+    return out2;
+  }
+  function svzRead(b) {
+    if (b.length < 16 || text(b, 0, 4) !== "SVZa") return { records: [], problems: ["not a ZEN-Core sound file"] };
+    const problems = [], records = [];
+    for (let i = 0; i < b[4]; i++) {
+      const e = 16 + 16 * i, tag = text(b, e, 4), off = u32(b, e + 8), size = u32(b, e + 12);
+      if (e + 16 > b.length || off + size > b.length || size < 16) {
+        problems.push(tag + " does not fit in the file");
+        continue;
+      }
+      if (tag !== "PATa") continue;
+      const n = u32(b, off), rs = u32(b, off + 4), info = u32(b, off + 8);
+      if (rs !== FW_REC || info + n * rs !== size) {
+        problems.push("PATa: " + n + " records of " + rs + " bytes do not fill its " + size + " bytes");
+        continue;
+      }
+      for (let k2 = 0; k2 < n; k2++) {
+        const r = b.slice(off + info + k2 * rs, off + info + (k2 + 1) * rs);
+        if (crc32(r) !== u32(b, off + 16 + 4 * k2)) problems.push("tone " + (k2 + 1) + ": checksum does not match");
+        records.push(r);
+      }
+    }
+    return { records, problems };
+  }
+  function svzTones(b) {
+    const { records, problems } = svzRead(b), tones = [];
+    let skipped = 0;
+    for (const r of records) {
+      const snd = fwTone(r, 0), name = snd && snd.v["CMN.NAME"];
+      if (!snd || !name || /^init tone$/i.test(name)) skipped++;
+      else tones.push({ name, snd });
+    }
+    return { tones, skipped, problems };
+  }
+  function svzNeedsSample(snd) {
+    const v = snd.v, out2 = [];
+    for (let p = 0; p < 4; p++) {
+      const g = v["PTL" + p + ".WAV_GTYPE"];
+      if (g !== 2 && g !== 3) continue;
+      if (v["PMT.PMT" + (p + 1) + "_PTL_SW"] !== 1 || v["SPTL" + p + ".OSC_TYPE"] !== 0) continue;
+      out2.push(
+        "partial " + (p + 1) + " plays " + (g === 2 ? "user sample " : "multisample ") + v["PTL" + p + ".WAV_NUM_L"]
+      );
+    }
+    return out2;
+  }
+  var stemOf = (s) => (String(s).replace(/[^A-Za-z0-9]/g, "").toUpperCase() || "TONES").slice(0, 8);
+  function svzBanks(list2, name, withSamples = false) {
+    const leftOut = [], seen2 = /* @__PURE__ */ new Set(), records = [];
+    let merged = 0;
+    for (const { name: nm, snd } of list2) {
+      const why = svzNeedsSample(snd);
+      if (why.length && !withSamples) {
+        leftOut.push({ name: nm, why: why.join(", ") });
+        continue;
+      }
+      const r = fwRecord(snd, new Uint8Array(FW_REC)), key = r.join(",");
+      if (seen2.has(key)) {
+        merged++;
+        continue;
+      }
+      seen2.add(key);
+      records.push(r);
+    }
+    const stem2 = stemOf(name), files = [];
+    for (let i = 0; i < records.length; i += SVZ_MAX) {
+      const k2 = i / SVZ_MAX, file = k2 ? stem2.slice(0, 8 - String(k2 + 1).length) + (k2 + 1) : stem2;
+      const part = records.slice(i, i + SVZ_MAX);
+      files.push({ file: file + ".SVZ", bytes: svzBuild(part), count: part.length });
+    }
+    return { files, leftOut, merged };
+  }
+
   // src/zen/zc-factory-ui.js
   var frame = () => new Promise((r) => setTimeout(r, 30));
   function factoryImport(done3) {
@@ -40015,9 +40145,13 @@ html.os-darwin.native-menu #menubar .mproj {
         for (const f of i.files) {
           toast("Reading " + f.name + "…");
           await frame();
-          let tones;
+          let tones = [], note = "";
           try {
-            tones = fwTones(new Uint8Array(await f.arrayBuffer()));
+            const b = new Uint8Array(await f.arrayBuffer()), r = svzTones(b);
+            tones = r.tones;
+            if (r.skipped) note += ", " + r.skipped + " blank or out of range left out";
+            if (r.problems.length && r.tones.length) note += ", " + r.problems.length + " checksum or size problems";
+            if (!tones.length) tones = fwTones(b);
           } catch (e) {
             tones = [];
           }
@@ -40034,7 +40168,7 @@ html.os-darwin.native-menu #menubar .mproj {
           const hs = new Set(ZS.list.filter((e) => e.folder === folder && e.src === "mine").map((e) => e.h));
           moved += await soundsRemoveWhere((e) => e.src === "factory" && !FW_BANK_NAMES[e.bank] && hs.has(e.h));
           toast(
-            "Added " + n + " tones from " + f.name + " to " + folder + (n < tones.length ? " (" + (tones.length - n) + " were already there)" : "")
+            "Added " + n + " tones from " + f.name + " to " + folder + (n < tones.length ? " (" + (tones.length - n) + " were already there)" : "") + note
           );
         }
         if (moved)
@@ -40061,6 +40195,30 @@ html.os-darwin.native-menu #menubar .mproj {
         }
       } : null
     ].filter(Boolean);
+  }
+
+  // src/zen/zc-svz-ui.js
+  async function exportSvz(entries2, name) {
+    const tones = entries2.filter((e) => e.kind === "tone").map((e) => {
+      const snd = soundOf(e);
+      snd.v["CMN.NAME"] = String(e.name).slice(0, 16);
+      return { name: e.name, snd };
+    });
+    if (!tones.length) return toast("Only tones go in a .svz bank; there are none here"), 0;
+    const { files, leftOut, merged } = svzBanks(tones, name);
+    if (!files.length) return toast("Every one of these tones plays a user sample, so there is nothing to save"), 0;
+    let saved = 0;
+    for (const f of files) if (await hooks.saveFile(f.file, new Blob([f.bytes]))) saved++;
+    const n = files.reduce((a, f) => a + f.count, 0), notes = [
+      files.length > 1 ? "in " + files.length + " files of up to " + SVZ_MAX : "",
+      merged ? merged + " identical copies written once" : "",
+      leftOut.length ? leftOut.length + " left out because they play a user sample" : ""
+    ].filter(Boolean);
+    if (saved)
+      toast(
+        "Saved " + n + " tone" + (n === 1 ? "" : "s") + (notes.length ? " (" + notes.join("; ") + ")" : "") + ". Copy to ROLAND/SOUND on the SD card."
+      );
+    return saved;
   }
 
   // src/zen/zc-browse-data.js
@@ -40681,6 +40839,7 @@ html.os-darwin.native-menu #menubar .mproj {
         action: () => (B.cat = catOf(e), B.group = "", render())
       },
       { label: "Show its bank", action: () => (B.bank = bankOf(e), render()) },
+      e.kind === "tone" ? { label: "Save as a .svz tone bank…", action: () => exportSvz([e], e.name) } : null,
       "-",
       { label: "Copy to", sub: targets((f) => copyTo([e], f)) },
       editable(e) ? { label: "Move to", sub: targets((f) => moveTo([e], f)) } : null,
@@ -40709,6 +40868,7 @@ html.os-darwin.native-menu #menubar .mproj {
       "-",
       { label: "Copy to", sub: targets((f) => copyTo(list2, f)) },
       own.length ? { label: "Move to", sub: targets((f) => moveTo(list2, f)) } : null,
+      ZE.kind === "tone" ? { label: "Save as a .svz tone bank…", action: () => exportSvz(list2, "TONES") } : null,
       own.length ? { label: "Delete…", danger: true, action: () => deleteMany(list2) } : null
     ]);
   }
@@ -40845,6 +41005,10 @@ html.os-darwin.native-menu #menubar .mproj {
               }
             }
           },
+          ZE.kind === "tone" ? {
+            label: "Save the folder as a .svz tone bank…",
+            action: () => exportSvz(filterList(all, { ...B, bank: "u:" + f, group: "", cat: "", tag: "", q: "" }), f)
+          } : null,
           {
             label: "Remove the folder…",
             danger: true,
@@ -45954,10 +46118,10 @@ html.os-darwin.native-menu #menubar .mproj {
       "aria-label",
       close ? "Close up on the first kick: the " + (pm.lane === 3 ? "volume" : "filter") + " point by point" : "The " + (pm.lane === 3 ? "volume" : "filter") + " over the clip, dipping on " + pm.kicks.length + " kicks"
     );
-    const add = (tag, at3, text2) => {
+    const add = (tag, at3, text3) => {
       const n = document.createElementNS(ns, tag);
       for (const a in at3) n.setAttribute(a, at3[a]);
-      if (text2) n.textContent = text2;
+      if (text3) n.textContent = text3;
       svg.append(n);
     };
     const at2 = (s) => pm.vals[(Math.round(s / dt) % pm.vals.length + pm.vals.length) % pm.vals.length];
@@ -46786,12 +46950,12 @@ html.os-darwin.native-menu #menubar .mproj {
   var STEP0 = 976;
   var STEP_SIZE = 96;
   var MPJ_KINDS = { 0: "tone", 1: "drum", 2: "looper" };
-  var text = (u8, at2, n) => String.fromCharCode(...u8.subarray(at2, at2 + n)).replace(/\0.*$/, "").replace(/[^\x20-\x7e]/g, " ").trim();
+  var text2 = (u8, at2, n) => String.fromCharCode(...u8.subarray(at2, at2 + n)).replace(/\0.*$/, "").replace(/[^\x20-\x7e]/g, " ").trim();
   function mpjSections(u8) {
-    if (u8.length < 64 || text(u8, 2, 4) !== "PRJ5") return null;
+    if (u8.length < 64 || text2(u8, 2, 4) !== "PRJ5") return null;
     const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength), out2 = {};
     for (let p = 16; p + 16 <= u8.length && p < 16 + 16 * 32; p += 16) {
-      const tag = text(u8, p, 4), model = text(u8, p + 4, 4);
+      const tag = text2(u8, p, 4), model = text2(u8, p + 4, 4);
       if (!/^[A-Z]{3}[a-z]$/.test(tag) && tag !== "DUMY") break;
       if (tag === "DUMY") break;
       const at2 = dv.getUint32(p + 8, true), size = dv.getUint32(p + 12, true);
@@ -46835,19 +46999,19 @@ html.os-darwin.native-menu #menubar .mproj {
           continue;
         }
         const slots = clipSteps2(u8, base, steps2);
-        clips.push({ size, steps: steps2, sound: text(u8, base, 16), slots, notes: slots.reduce((n, s) => n + s.length, 0) });
+        clips.push({ size, steps: steps2, sound: text2(u8, base, 16), slots, notes: slots.reduce((n, s) => n + s.length, 0) });
       }
-      tracks3.push({ kind, sound: text(u8, P2 + PRJ_CLIPS + (t * 17 + 16) * CLIP_SIZE, 16), clips });
+      tracks3.push({ kind, sound: text2(u8, P2 + PRJ_CLIPS + (t * 17 + 16) * CLIP_SIZE, 16), clips });
     }
     const samples = [];
     if (sec.USDa) {
       const end = sec.USDa.at + sec.USDa.size;
       let p = sec.USDa.at + 48;
-      while (p + 48 <= end && text(u8, p, 4) === "SMPd") {
+      while (p + 48 <= end && text2(u8, p, 4) === "SMPd") {
         const hs = dv.getUint16(p + 4, true), ch = dv.getUint16(p + 6, true), size = dv.getUint32(p + 8, true), count = dv.getUint32(p + 12, true), rate = dv.getUint32(p + 36, true);
         if (!hs || p + hs + count * 2 > end || ch < 1 || ch > 2) break;
         samples.push({
-          name: text(u8, p + 16, 16) || "Sample " + (samples.length + 1),
+          name: text2(u8, p + 16, 16) || "Sample " + (samples.length + 1),
           channels: ch,
           rate,
           at: p + hs,
@@ -46857,7 +47021,7 @@ html.os-darwin.native-menu #menubar .mproj {
       }
     }
     const loops = [];
-    if (sec.LPDa && text(u8, sec.LPDa.at + 16, 4) === "DIK0") {
+    if (sec.LPDa && text2(u8, sec.LPDa.at + 16, 4) === "DIK0") {
       const D2 = sec.LPDa.at + 16, end = sec.LPDa.at + sec.LPDa.size, seen2 = /* @__PURE__ */ new Set();
       for (let e = 0; e < 128; e++) {
         const bytes = dv.getUint32(D2 + 16 + e * 16, true), off = dv.getUint32(D2 + 16 + e * 16 + 4, true);
@@ -46874,7 +47038,7 @@ html.os-darwin.native-menu #menubar .mproj {
       bars: u8[P2 + 80 + s]
     }));
     return {
-      name: text(u8, P2 + 16, 16),
+      name: text2(u8, P2 + 16, 16),
       scenes,
       /* the scene chain switched on (CHAIN ON) */
       chain: u8[P2 + 323] === 1,
@@ -47047,7 +47211,7 @@ html.os-darwin.native-menu #menubar .mproj {
     return u8;
   }
   function mpjRead(u8) {
-    const P2 = mpjSections(u8).PRJa.at, text2 = (o) => String.fromCharCode(...u8.subarray(o, o + 16)).replace(/[\0\xff]+$/, "").trimEnd();
+    const P2 = mpjSections(u8).PRJa.at, text3 = (o) => String.fromCharCode(...u8.subarray(o, o + 16)).replace(/[\0\xff]+$/, "").trimEnd();
     return Array.from({ length: 8 }, (_, t) => {
       const o = P2 + 512 + t * 256;
       return {
@@ -47055,23 +47219,12 @@ html.os-darwin.native-menu #menubar .mproj {
         src: u8[o + 21],
         clips: Array.from({ length: 16 }, (_2, k2) => {
           const c = P2 + PRJ_CLIPS2 + (t * 17 + k2) * CLIP_SIZE2;
-          return u8[c + 18] === 255 ? null : text2(c);
+          return u8[c + 18] === 255 ? null : text3(c);
         }),
         picks: Array.from(u8.subarray(o + 144, o + 144 + 16))
       };
     });
   }
-
-  // src/core/crc.js
-  var CRC_T = (() => {
-    const t = [];
-    for (let n = 0; n < 256; n++) {
-      let c = n;
-      for (let k2 = 0; k2 < 8; k2++) c = c & 1 ? 3988292384 ^ c >>> 1 : c >>> 1;
-      t[n] = c >>> 0;
-    }
-    return t;
-  })();
 
   // src/song/export.js
   var DL = null;
@@ -47146,7 +47299,7 @@ html.os-darwin.native-menu #menubar .mproj {
   }
   function buildMidi(only) {
     const PPQ = 480, ST = PPQ / 4;
-    const u32 = (n) => [n >>> 24 & 255, n >>> 16 & 255, n >>> 8 & 255, n & 255], u16 = (n) => [n >> 8 & 255, n & 255];
+    const u322 = (n) => [n >>> 24 & 255, n >>> 16 & 255, n >>> 8 & 255, n & 255], u16 = (n) => [n >> 8 & 255, n & 255];
     const str = (s) => [...s].map((ch) => ch.charCodeAt(0) & 127);
     const chunk = (evs) => {
       evs.sort((a, b) => a.t - b.t || a.o - b.o);
@@ -47157,7 +47310,7 @@ html.os-darwin.native-menu #menubar .mproj {
         last3 = e.t;
       }
       d.push(0, 255, 47, 0);
-      return [...str("MTrk"), ...u32(d.length), ...d];
+      return [...str("MTrk"), ...u322(d.length), ...d];
     };
     const tempo = Math.round(6e7 / S.bpm);
     const tracks3 = [
@@ -47218,10 +47371,10 @@ html.os-darwin.native-menu #menubar .mproj {
       }
       tracks3.push(chunk(evs));
     }
-    const head3 = [...str("MThd"), ...u32(6), ...u16(1), ...u16(tracks3.length), ...u16(PPQ)];
+    const head3 = [...str("MThd"), ...u322(6), ...u16(1), ...u16(tracks3.length), ...u16(PPQ)];
     return new Uint8Array([...head3, ...tracks3.flat()]);
   }
-  var crc32 = (u) => {
+  var crc322 = (u) => {
     let c = 4294967295;
     for (let i = 0; i < u.length; i++) c = CRC_T[(c ^ u[i]) & 255] ^ c >>> 8;
     return (c ^ 4294967295) >>> 0;
@@ -47236,7 +47389,7 @@ html.os-darwin.native-menu #menubar .mproj {
     const w16 = (a, n) => a.push(n & 255, n >> 8 & 255), w32 = (a, n) => a.push(n & 255, n >> 8 & 255, n >> 16 & 255, n >>> 24 & 255);
     for (const f of files) {
       const name = enc.encode(f.name);
-      const crc = crc32(f.data);
+      const crc = crc322(f.data);
       const len = f.data.length;
       const lh = [];
       w32(lh, 67324752);
@@ -66227,11 +66380,11 @@ html.os-darwin.native-menu #menubar .mproj {
     t.title = "Whether this computer kept up with the set. A hiccup means it was too busy for a moment and the music paused slightly. Closing other programs, browser tabs or the visualiser helps.";
   }
   var SHOWN = /* @__PURE__ */ new Map();
-  function put3(id, text2) {
+  function put3(id, text3) {
     const e = $("#" + id);
-    if (!e || SHOWN.get(e) === text2) return;
-    SHOWN.set(e, text2);
-    e.textContent = text2;
+    if (!e || SHOWN.get(e) === text3) return;
+    SHOWN.set(e, text3);
+    e.textContent = text3;
   }
   function cssVar(e, k2, v) {
     if (!e) return;
@@ -70663,10 +70816,10 @@ html.os-darwin.native-menu #menubar .mproj {
     } catch (e) {
     }
   }
-  function projLoadText(text2, name, path2) {
+  function projLoadText(text3, name, path2) {
     let s;
     try {
-      s = JSON.parse(text2);
+      s = JSON.parse(text3);
       if (!s || s.v !== 1 || !Array.isArray(s.tracks) || s.tracks.length !== 8 || !s.patterns || !Array.isArray(s.clips))
         throw 0;
     } catch (e) {
@@ -72410,7 +72563,7 @@ html.os-darwin.native-menu #menubar .mproj {
       "Check for updates"
     );
     checkUpdate().then((u) => show(u, false));
-    const card = (icon, title, text2, fn, on3) => el(
+    const card = (icon, title, text3, fn, on3) => el(
       "button",
       {
         type: "button",
@@ -72422,7 +72575,7 @@ html.os-darwin.native-menu #menubar .mproj {
       },
       el("span", { class: "stIcon", "aria-hidden": "true" }, icon),
       el("b", {}, title),
-      el("small", {}, text2)
+      el("small", {}, text3)
     );
     const ov = el(
       "div",
@@ -73171,8 +73324,8 @@ html.os-darwin.native-menu #menubar .mproj {
   var backupsOn = () => !!(HOST && HOST.backupList);
   async function restore(b) {
     try {
-      const text2 = await HOST.backupRead(b.name);
-      if (projLoadText(text2, "Recovered song", ""))
+      const text3 = await HOST.backupRead(b.name);
+      if (projLoadText(text3, "Recovered song", ""))
         toast("Brought back the song from " + when(b.at) + ". Undo takes it back.");
     } catch (e) {
       toast("Could not read that backup");
@@ -76350,10 +76503,10 @@ html.os-darwin.native-menu #menubar .mproj {
     ["button", "Move a control on your controller to link it", "Learn"]
   ];
   function apply3(root) {
-    for (const [sel3, help, text2] of HELP)
+    for (const [sel3, help, text3] of HELP)
       for (const e of root.querySelectorAll(sel3)) {
         if (e.title || e.closest('[title]:not([title=""])') || e.dataset.helped) continue;
-        if (text2 && !(e.textContent || "").trim().startsWith(text2)) continue;
+        if (text3 && !(e.textContent || "").trim().startsWith(text3)) continue;
         e.title = help;
         e.dataset.helped = "1";
       }
@@ -76475,6 +76628,7 @@ html.os-darwin.native-menu #menubar .mproj {
         libraryJSON,
         slotAddr,
         fw: { FW_REC, fwFields, fwKits, fwKitBytes, fwTone, fwTones, fwRecord, newSound },
+        svz: { SVZ_MAX, svzBanks, svzBuild, svzNeedsSample, svzRead, svzTones },
         get ZE() {
           return ZE;
         },

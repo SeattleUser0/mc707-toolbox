@@ -1,11 +1,13 @@
 // The Sound browser's factory tone items: add the MC-707's preset tones and drum kits from its system update
 // file (read here on your computer, see zc-factory.js), or take them out of the library again; and add the
 // tones of expansion files (.svz, the same tone records) into one of your folders, one folder per file.
+// An .svz is read as a container (zc-svz.js), so a bank of any size comes in, not only runs of 8 or more.
 //
 // Reads: ZS.
 import { el, toast } from '../core/dom.js';
 import { askDlg } from '../ui/dialogs.js';
 import { FW_BANK_NAMES, fwKits, fwTones } from './zc-factory.js';
+import { svzTones } from './zc-svz.js';
 import { ZS, folderAdd, folderList, soundAddMany, soundsRemoveSrc, soundsRemoveWhere } from './zc-sounds.js';
 
 const frame = () => new Promise(r => setTimeout(r, 30));
@@ -84,9 +86,17 @@ export function expansionImport(done) {
       for (const f of i.files) {
         toast('Reading ' + f.name + '…');
         await frame();
-        let tones;
+        /* read the file as a container (any number of tones, checksums checked); an older or odd file
+           that is not one falls back to the scan for runs of tone records */
+        let tones = [],
+          note = '';
         try {
-          tones = fwTones(new Uint8Array(await f.arrayBuffer()));
+          const b = new Uint8Array(await f.arrayBuffer()),
+            r = svzTones(b);
+          tones = r.tones;
+          if (r.skipped) note += ', ' + r.skipped + ' blank or out of range left out';
+          if (r.problems.length && r.tones.length) note += ', ' + r.problems.length + ' checksum or size problems';
+          if (!tones.length) tones = fwTones(b);
         } catch (e) {
           tones = [];
         }
@@ -110,7 +120,8 @@ export function expansionImport(done) {
             f.name +
             ' to ' +
             folder +
-            (n < tones.length ? ' (' + (tones.length - n) + ' were already there)' : '')
+            (n < tones.length ? ' (' + (tones.length - n) + ' were already there)' : '') +
+            note
         );
       }
       if (moved)
