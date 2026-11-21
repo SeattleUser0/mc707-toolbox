@@ -6,19 +6,24 @@ How it works: `docs/MCP-SPEC.md`.
 
 ## 1. Run this fork's app
 
-Either build the Mac app once:
+The easy way: double-click `mcp/Build Toolbox App.command` (copy it anywhere first; it works in the folder
+it sits in). It downloads this branch, builds the Mac app, puts it in Applications in place of the old one
+(the old one is kept in `toolbox-build/backup`, outside Applications, because both builds use the same app
+id, `local.mc707.toolbox`), opens it once, checks that the MCP server answers, and adds the Claude Desktop
+entry of section 2 to `claude_desktop_config.json` (a backup of that file is kept). Then quit and reopen
+Claude Desktop. Run it again any time to update. Needs Node 18 or later and git.
+
+By hand:
 
 ```
 npm install
 npx electron-builder --mac --arm64 --publish never
 ```
 
+then replace the Toolbox in Applications with `dist/MC-707-Toolbox-mac-arm64.dmg` (keep only one copy in
+Applications), or run it from the repo folder with `npm install` then `npm start`.
 (`index.html` in the repo is already built. After changing anything in `src/`, run `npm run tools` once
 and `npm run build` before building the app.)
-
-and replace the Toolbox in Applications with `dist/MC-707-Toolbox-mac-arm64.dmg` (both builds use the
-same app id, `local.mc707.toolbox`, so keep only this one, or the bridge may open the other), or run it
-from the repo folder with `npm install` then `npm start`.
 
 Open it once. It makes `~/Library/Application Support/MC-707 Toolbox/mcp.json` with a port (8717) and a
 token. The server is on from then on, while the app is open.

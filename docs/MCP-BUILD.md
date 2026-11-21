@@ -7,6 +7,7 @@ Tracks what is done, left to build and left to test. Update with every change. T
 
 | Version | Date | Change |
 |---|---|---|
+| 0.1.1 | 2026-11-21 | `mcp/Build Toolbox App.command`: builds the Mac app from this branch, swaps it into Applications (old one backed up outside it), opens it, checks the server, adds the Claude Desktop entry. Checked here: the packaged app (Linux build) holds `main-mcp.cjs` and the bridge in `app.asar`, and the app's own binary runs the bridge from inside `app.asar` with `ELECTRON_RUN_AS_NODE=1` (initialize and tools/list answered) |
 | 0.1.0 | 2026-11-20 | First version. Song file format `mc707-song` v1 (`src/core/song-spec.js`), its use in the app (`src/ui/song-file.js`) and in File > Open, the ten tools (`src/ui/mcp-tools.js`, `src/ui/mcp-guide.js`), the server in the main process (`main-mcp.cjs`: Streamable HTTP on 127.0.0.1, token, Origin check, SD card, project writes), preload calls, the stdio bridge (`mcp/toolbox-mcp-bridge.cjs`), the ChatGPT page (`docs/MCP-SONG-FORMAT.md`, generated). No change to how the app works without it |
 
 ## Files
@@ -21,6 +22,7 @@ Tracks what is done, left to build and left to test. Update with every change. T
 | `src/main.js` | `initMcp()` once the page is drawn; `window.__app.mcp` for the tests |
 | `main-mcp.cjs` | The server, the SD card, the writes (main process) |
 | `main.js`, `preload.js`, `package.json` | Start the server; IPC calls; the two new files in the app build; `npm run test:mcp` |
+| `mcp/Build Toolbox App.command` | Double-click on the Mac: build, install, first start, server check, Claude Desktop entry |
 | `mcp/toolbox-mcp-bridge.cjs` | stdio to HTTP, for Claude Desktop; opens the app if closed (macOS) |
 | `scripts/mcp-song-format.mjs` | Writes `docs/MCP-SONG-FORMAT.md` |
 | `tests/song-spec.test.mjs` | Format: notes, lanes, errors, warnings, limits, round trip, the example, the ChatGPT page current (Node) |
@@ -58,8 +60,9 @@ Tracks what is done, left to build and left to test. Update with every change. T
 
 ## Left to test
 
+- [ ] `Build Toolbox App.command` on the Mac (build, swap, Claude Desktop entry)
 - [ ] On the Mac: the fork's app starts the server; Claude Desktop sees the ten tools through the bridge
-- [ ] The bridge run with the app's own binary (`ELECTRON_RUN_AS_NODE=1`, script inside `app.asar`)
+- [ ] The bridge run with the app's own binary on macOS (works on the Linux build)
 - [ ] The bridge opening the app when it is closed (`open -b local.mc707.toolbox`)
 - [ ] Card detection on the Mac with the real card (storage mode and in a reader)
 - [ ] A song from load_song, saved to the card, loaded on the MC-707 (PROJECT > LOAD): plays the scene chain with
