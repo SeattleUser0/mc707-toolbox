@@ -44,7 +44,7 @@ export const MCP_TOOLS = [
   {
     name: 'list_sounds',
     description:
-      'Tones and drum kits in the Toolbox Sound library, by name, for the sound fields of a song. Factory sounds appear once imported from the MC-707 update file (Sound browser > Grab from > Factory tones and kits).',
+      'Tones and drum kits in the Toolbox Sound library, by name, for the sound fields of a song. Factory sounds appear once imported from the MC-707 update file (MC-707 menu > Template builder… > Grab factory tones and kits…).',
     inputSchema: {
       type: 'object',
       properties: {
@@ -154,7 +154,7 @@ async function status() {
       other_kits: n(null, 'kit'),
       note:
         n('factory', 'tone') === 0
-          ? 'No factory sounds yet: in the Toolbox, Sound browser > Grab from > Factory tones and kits, with the MC-707 update file (MC707_UPA_up.bin).'
+          ? 'No factory sounds yet: in the Toolbox, MC-707 menu > Template builder… > Grab factory tones and kits…, with the MC-707 update file (MC707_UPA_up.bin).'
           : undefined
     },
     card,

@@ -79,7 +79,7 @@ project, or ask Claude to save it to the card.
 ## 5. Before the first song
 
 - Settings > Device: MC-707.
-- Sound browser > Grab from > Factory tones and kits, with `MC707_UPA_up.bin` (the MC-707 system update
+- MC-707 menu > Template builder… > Grab factory tones and kits… (then close the Template builder), with `MC707_UPA_up.bin` (the MC-707 system update
   file). Without it a song still loads and saves, but every clip keeps the project template's sound.
 - To hear it before saving: connect the MC-707 over USB and pick it as MIDI out.
 

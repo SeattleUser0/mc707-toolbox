@@ -170,7 +170,7 @@ The last scene's length is written as OFF, so the MC-707's chain stops there (th
 ### Sounds
 
 Sounds are found by name, case and spaces ignored, in this order: factory tones or kits imported from
-the MC-707's update file (Sound browser > Grab from > Factory tones and kits), then the rest of the
+the MC-707's update file (MC-707 menu > Template builder… > Grab factory tones and kits…), then the rest of the
 Sound library. A drum clip needs a factory kit (only those go into a project file). A tone clip takes
 any tone in the library.
 
