@@ -1,5 +1,5 @@
 // Project files: new, open, save, recent projects and the project title, through the Windows app or
-// the browser.
+// the browser. File > Open also takes a song file an AI wrote (format mc707-song, ui/song-file.js).
 //
 // Reads: S, UI, PROJ.
 import { $, toast } from '../core/dom.js';
@@ -9,6 +9,8 @@ import { stopAll } from '../services/transport.js';
 import { afterReplaceKeepUndo } from './controls.js';
 import { saveFile } from '../song/export.js';
 import { askDlg } from './dialogs.js';
+import { SPEC_FORMAT } from '../core/song-spec.js';
+import { loadSongFile } from './song-file.js';
 
 /* ---------- projects, folders and exit ---------- */
 export function projTitle() {
@@ -42,6 +44,8 @@ export function projLoadText(text, name, path) {
   let s;
   try {
     s = JSON.parse(text);
+    /* a song file an AI wrote (ChatGPT, or Claude without the MCP server): docs/MCP-SPEC.md section 4 */
+    if (s && s.format === SPEC_FORMAT) return projLoadSongFile(s, name);
     if (!s || s.v !== 1 || !Array.isArray(s.tracks) || s.tracks.length !== 8 || !s.patterns || !Array.isArray(s.clips))
       throw 0;
   } catch (e) {
@@ -61,6 +65,29 @@ export function projLoadText(text, name, path) {
   if (path) projRecent(path);
   projTitle();
   toast('Opened ' + (PROJ.name || 'project'));
+  return true;
+}
+/* File > Open on a song file (format mc707-song): made into a song like the MCP server's load_song; it is
+   not a Toolbox project, so Save asks where to save the song (PROJ.path stays empty) */
+async function projLoadSongFile(spec, name) {
+  stopAll();
+  const r = await loadSongFile(spec);
+  if (!r.applied) {
+    toast('That song file has ' + r.errors.length + ' error(s): ' + r.errors.slice(0, 2).join('; '));
+    return false;
+  }
+  PROJ.name = r.name || (name || '').replace(/\.json$/i, '');
+  projTitle();
+  toast(
+    'Opened the song file ' +
+      (PROJ.name || '') +
+      ': ' +
+      r.summary.scenes +
+      ' scenes, ' +
+      r.summary.clips +
+      ' clips' +
+      (r.warnings.length ? ' (' + r.warnings.length + ' warnings: ' + r.warnings[0] + ')' : '')
+  );
   return true;
 }
 const projText = () => JSON.stringify(S, null, 1);

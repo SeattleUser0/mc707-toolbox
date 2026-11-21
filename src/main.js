@@ -165,6 +165,7 @@ import { pending, writeAll, writeChanged, writeOneClip, writeOneScene, writeThes
 import { songToRows, scenesToSong } from './scene/convert.js';
 import { startOnOpen, startOpen } from './ui/start-screen.js';
 import { projTitle } from './ui/projects.js';
+import { initMcp, mcpHandle } from './ui/mcp-tools.js';
 import { ZE, zeSendAll, zenOpen } from './zen/zc-editor.js';
 import { pageOf } from './zen/zc-lab-fine.js';
 import { isDotted, isTriplet, melodyClashes, melodyQuality, melodyScore } from './library/melody-fit.js';
@@ -361,6 +362,7 @@ PROJ.t = projTitle;
     pump,
     mpj: { open: mpjOpen, read: readMpj, loopAudio, song: mpjSong, bytes: mpjBytes },
     compose: { compose, composer, apply: applyComposed, now: composeNow },
+    mcp: mcpHandle,
     tpl: { TB, bytes: tbBytes, open: templateBuilderOpen, read: mpjRead },
     get S() {
       return S;
@@ -450,6 +452,8 @@ PROJ.t = projTitle;
     requestAnimationFrame(() => {
       document.documentElement.classList.remove('boot');
       if (HOST && HOST.appReady) HOST.appReady();
+      /* the desktop app's MCP server can now pass tool calls in (ui/mcp-tools.js) */
+      initMcp();
       /* then the MC-707 or MC-101, if it is plugged in (and the app may) */
       autoConnectAtLaunch();
     })

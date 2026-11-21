@@ -31,5 +31,11 @@ contextBridge.exposeInMainWorld('toolbox', {
   setChrome: (c) => ipcRenderer.send('chrome', c),
   // a Mac's menu bar: the app's menus, and the one chosen
   setMacMenu: (menus) => ipcRenderer.send('mac-menu', menus),
-  onMenuCmd: (cb) => ipcRenderer.on('menu-cmd', (_e, id) => cb(id))
+  onMenuCmd: (cb) => ipcRenderer.on('menu-cmd', (_e, id) => cb(id)),
+  // the MCP server (fork, main-mcp.cjs): tool calls in, answers out, the SD card, and saving a project
+  mcpOnCall: (cb) => ipcRenderer.on('mcp-call', (_e, id, method, params) => cb(id, method, params)),
+  mcpReply: (id, r) => ipcRenderer.send('mcp-reply', id, r),
+  mcpReady: () => ipcRenderer.send('mcp-ready'),
+  mcpCard: () => ipcRenderer.invoke('mcp-card'),
+  mcpSave: (a) => ipcRenderer.invoke('mcp-save', a)
 });

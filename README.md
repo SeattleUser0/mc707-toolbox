@@ -8,6 +8,8 @@ Write songs, put them on your **Roland MC-707 or MC-101**, play live sets and de
 
 **Try it:** open the [web version](https://mendo-707.github.io/mc707-toolbox/) in Chrome or Edge, or download the app for Windows, Mac or Linux from [Releases](../../releases).
 
+> **This fork (SeattleUser0/mc707-toolbox) adds an MCP server:** ask Claude to write a whole song for the MC-707, hear it through the MC-707, and have the Toolbox save it as a project on the SD card. ChatGPT can write the same song file for File > Open. Setup: [docs/MCP-SETUP.md](docs/MCP-SETUP.md). How it works: [docs/MCP-SPEC.md](docs/MCP-SPEC.md).
+
 ## What it does
 
 ### Song Mode

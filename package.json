@@ -8,7 +8,7 @@
     "start": "electron .",
     "dist": "electron-builder --win nsis portable --publish never",
     "build": "node scripts/build.mjs",
-    "check": "node scripts/build.mjs --check && node scripts/check-imports.mjs --strict && node scripts/module-map.mjs --check && node scripts/param-docs.mjs --check",
+    "check": "node scripts/build.mjs --check && node scripts/check-imports.mjs --strict && node scripts/module-map.mjs --check && node scripts/param-docs.mjs --check && node scripts/mcp-song-format.mjs --check",
     "check-imports": "node scripts/check-imports.mjs",
     "dev": "node scripts/dev.mjs",
     "test": "node --test tests/*.test.mjs",
@@ -16,7 +16,8 @@
     "format": "npx --prefix .ci-tools prettier --write src scripts tests",
     "tools": "npm install --prefix .ci-tools --no-audit --no-fund playwright@1.56.1 esbuild@0.28.2 prettier@3.8.1 && npx --prefix .ci-tools playwright install chromium",
     "dist:mac": "electron-builder --mac --arm64 --publish never && electron-builder --mac --x64 --publish never",
-    "dist:linux": "electron-builder --linux --publish never"
+    "dist:linux": "electron-builder --linux --publish never",
+    "test:mcp": "node --test tests/song-spec.test.mjs tests/mcp-server.test.mjs"
   },
   "devDependencies": {
     "electron": "^33.0.0",
@@ -27,11 +28,13 @@
     "productName": "MC707-101 Toolbox",
     "files": [
       "main.js",
+      "main-mcp.cjs",
       "preload.js",
       "index.html",
       "package.json",
       "node_modules/lamejs/lame.min.js",
-      "icon.png"
+      "icon.png",
+      "mcp/toolbox-mcp-bridge.cjs"
     ],
     "win": {
       "target": [

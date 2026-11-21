@@ -10545,9 +10545,9 @@ html.os-darwin.native-menu #menubar .mproj {
           class: "btn sm",
           title: "Open it in a window of its own, to drag onto another screen",
           onclick: () => {
-            const build3 = h.build;
+            const build4 = h.build;
             h.close(true);
-            popout({ ...o, build: build3, panel: false });
+            popout({ ...o, build: build4, panel: false });
           }
         },
         "Pop out ⧉"
@@ -11342,9 +11342,9 @@ html.os-darwin.native-menu #menubar .mproj {
     const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(c || "");
     return m ? "#" + [m[1], m[2], m[3]].map((x) => (+x).toString(16).padStart(2, "0")).join("") : null;
   }
-  function macMenus(build3) {
+  function macMenus(build4) {
     if (!HOST || HOST.platform !== "darwin" || !HOST.setMacMenu || !HOST.onMenuCmd) return false;
-    let RUN = /* @__PURE__ */ new Map();
+    let RUN2 = /* @__PURE__ */ new Map();
     const send2 = () => {
       const run2 = /* @__PURE__ */ new Map();
       let n = 0;
@@ -11356,13 +11356,13 @@ html.os-darwin.native-menu #menubar .mproj {
         return { id, label: it.label, key: it.key || "", checked: it.checked == null ? null : !!it.checked };
       });
       try {
-        HOST.setMacMenu(build3().map((m) => ({ label: m.label, items: ser(m.items) })));
-        RUN = run2;
+        HOST.setMacMenu(build4().map((m) => ({ label: m.label, items: ser(m.items) })));
+        RUN2 = run2;
       } catch (e) {
       }
     };
     HOST.onMenuCmd((id) => {
-      const f = RUN.get(id);
+      const f = RUN2.get(id);
       try {
         if (f) f();
       } catch (e) {
@@ -21395,7 +21395,7 @@ html.os-darwin.native-menu #menubar .mproj {
   function showMenu(x, y, items) {
     closeMenu();
     const m = el("div", { class: "cmenu", role: "menu" });
-    const build3 = (list2, host2) => {
+    const build4 = (list2, host2) => {
       list2.forEach((it) => {
         if (!it) return;
         if (it === "-") {
@@ -21426,7 +21426,7 @@ html.os-darwin.native-menu #menubar .mproj {
             el("span", { class: "arr" }, "▸")
           );
           const sm = el("div", { class: "cmenu subm" });
-          build3(it.sub, sm);
+          build4(it.sub, sm);
           row2.append(sm);
           host2.append(row2);
           return;
@@ -21449,7 +21449,7 @@ html.os-darwin.native-menu #menubar .mproj {
         );
       });
     };
-    build3(items, m);
+    build4(items, m);
     document.body.append(m);
     CM = m;
     const r = m.getBoundingClientRect();
@@ -22649,7 +22649,7 @@ html.os-darwin.native-menu #menubar .mproj {
     }
     return { items, bad, skipped: files.length - list2.length };
   }
-  function modalBox(title, build3) {
+  function modalBox(title, build4) {
     return new Promise((res) => {
       const back = el("div", {
         style: "position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:300;padding:16px"
@@ -22680,7 +22680,7 @@ html.os-darwin.native-menu #menubar .mproj {
           el("button", { class: "btn sm", onclick: () => close(null), "aria-label": "Close" }, "✕")
         )
       );
-      build3(box, close);
+      build4(box, close);
       back.append(box);
       back.addEventListener("mousedown", (e) => {
         if (e.target === back) close(null);
@@ -33038,7 +33038,7 @@ html.os-darwin.native-menu #menubar .mproj {
       { "aria-label": "Lane" },
       ...MOTION_LANES.map((n, i) => el("option", { value: i, selected: i === 3 }, n))
     );
-    const out2 = el("pre", { class: "sfOut" }, "Nothing read yet."), status3 = el("div", { class: "hint", role: "status", "aria-live": "polite" }, "");
+    const out2 = el("pre", { class: "sfOut" }, "Nothing read yet."), status4 = el("div", { class: "hint", role: "status", "aria-live": "polite" }, "");
     const log = [];
     const say = (...l) => {
       log.push(...l);
@@ -33060,7 +33060,7 @@ html.os-darwin.native-menu #menubar .mproj {
       } finally {
         busy4 = false;
         btns.forEach((b) => b.disabled = false);
-        status3.textContent = "";
+        status4.textContent = "";
       }
     };
     const readAll = el(
@@ -33073,7 +33073,7 @@ html.os-darwin.native-menu #menubar .mproj {
           say("", "Read " + where2() + " (" + steps2 + " steps" + (n < steps2 ? ", the first " + n + " read" : "") + "):");
           for (let l = 0; l < MOTION_LANES.length; l++) {
             const v = await readMotion(t, k2, l, n, (d, of) => {
-              status3.textContent = "Reading " + MOTION_LANES[l] + "… step " + d + " of " + of;
+              status4.textContent = "Reading " + MOTION_LANES[l] + "… step " + d + " of " + of;
             });
             say("  " + MOTION_LANES[l] + ": " + (v ? motionSummary(v) : "did not answer"));
           }
@@ -33283,7 +33283,7 @@ html.os-darwin.native-menu #menubar .mproj {
           "Press Copy results and paste it into the chat. It has what was read, what was written, and what you heard.",
           row2(copy)
         ),
-        status3,
+        status4,
         out2,
         el(
           "div",
@@ -40678,7 +40678,7 @@ html.os-darwin.native-menu #menubar .mproj {
 
   // src/zen/zc-grab.js
   var isBlank = (snd) => /^(|init ?(tone|kit|sound))$/i.test((snd.v[snd.kind === "kit" ? "KCMN.NAME" : "CMN.NAME"] || "").trim());
-  async function grabClips(scope, g, status3) {
+  async function grabClips(scope, g, status4) {
     const dn2 = DEVS[DEV].name;
     if (!await zxConnect()) return toast("Connect the " + dn2 + " first"), null;
     if (!ZX.inp) return toast("No MIDI input from the " + dn2 + ": it cannot be read"), null;
@@ -40691,7 +40691,7 @@ html.os-darwin.native-menu #menubar .mproj {
     for (const [t, k2, kind] of jobs) {
       if (g.stop) break;
       g.msg = "Reading track " + devNum(t) + ", clip " + (k2 + 1);
-      status3();
+      status4();
       const snd = newSound(kind), r = await readSound(snd, slotAddr(kind, t, k2));
       g.done++;
       if (r.silent) {
@@ -40702,7 +40702,7 @@ html.os-darwin.native-menu #menubar .mproj {
       else if (!Object.keys(diffOf(snd)).length || isBlank(snd)) g.empty++;
       else if (await soundAdd(snd, { src: "mc707" })) g.added++;
       else g.same++;
-      status3();
+      status4();
     }
     toast(
       "Grabbed " + g.added + " new sound" + (g.added === 1 ? "" : "s") + (g.same ? ", " + g.same + " already here" : "") + (g.empty ? ", " + g.empty + " empty" : "") + (g.bad ? ", " + g.bad + " could not be read" : "") + (g.stop ? " (stopped)" : "")
@@ -46625,7 +46625,7 @@ html.os-darwin.native-menu #menubar .mproj {
       body.textContent = "";
       count.textContent = all.length > SHOW ? "First " + SHOW + " of " + all.length : all.length + " patterns";
       for (const m of all.slice(0, SHOW)) {
-        const play2 = el(
+        const play3 = el(
           "button",
           {
             type: "button",
@@ -46650,7 +46650,7 @@ html.os-darwin.native-menu #menubar .mproj {
               onclick: () => choose(m),
               onkeydown: (e) => e.key === "Enter" && choose(m)
             },
-            play2,
+            play3,
             el("b", {}, m.name),
             el("span", { class: "hint" }, meta(m))
           )
@@ -46967,11 +46967,11 @@ html.os-darwin.native-menu #menubar .mproj {
       { label: "Nothing on track " + devNum(t), checked: q.rows[i].pick[t] < 0, action: () => setPick(i, t, -1) }
     ]);
   }
-  function sceneMenu(i, x, y, play2) {
+  function sceneMenu(i, x, y, play3) {
     const n = rows().length;
     showMenu(x, y, [
-      { label: "Play from this scene", action: () => play2(i, false) },
-      { label: "Loop this scene", action: () => play2(i, true) },
+      { label: "Play from this scene", action: () => play3(i, false) },
+      { label: "Loop this scene", action: () => play3(i, true) },
       { label: "Write it to the MC-707", action: () => writeOneScene(i) },
       "-",
       { label: "Add a scene before it", action: () => addRow(i - 1) },
@@ -57451,7 +57451,7 @@ html.os-darwin.native-menu #menubar .mproj {
       return x;
     };
     let anchor = null;
-    const play2 = (bar2, m, kind) => {
+    const play3 = (bar2, m, kind) => {
       const c0 = ch[bar2 % ch.length], pcs0 = pcsOf(c0);
       const want = anchor ?? center;
       let start = snap(c0, want, 0);
@@ -57487,7 +57487,7 @@ html.os-darwin.native-menu #menubar .mproj {
     const vel = (o.vel || (v === "break" ? 92 : v === "verse" ? 96 : 110)) + Math.round(ctx2.mood.edge * 10);
     const all = [];
     for (let b = 0; b < nb; b += 8)
-      form2.forEach((x, i) => all.push(...play2(b + i * 2, x === "B" ? B2 : A, x === "B" ? "A" : x)));
+      form2.forEach((x, i) => all.push(...play3(b + i * 2, x === "B" ? B2 : A, x === "B" ? "A" : x)));
     for (const [b, s, len0, n0] of all) {
       if (b >= nb) continue;
       const len = o.len ? Math.min(len0, o.len) : len0, n = o.top ? o.top(n0) : n0;
@@ -58499,11 +58499,11 @@ html.os-darwin.native-menu #menubar .mproj {
         if (t === trackOf(0) && oneKit() && set2 !== "R") pool = "full";
         if (!id) id = sets[set2 === "R" ? "A" : set2][t];
         if (!id || !facById(id)) continue;
-        let play2 = play0;
+        let play3 = play0;
         if (S.tracks[t].type === "tone" && r() < 0.25)
-          play2 = play2 ? r() < 0.5 ? null : play2 : MOVE[Math.floor(r() * MOVE.length)];
+          play3 = play3 ? r() < 0.5 ? null : play3 : MOVE[Math.floor(r() * MOVE.length)];
         cells[t] = { id, pool };
-        if (play2) cells[t].play = play2;
+        if (play3) cells[t].play = play3;
       }
       if (!Object.keys(cells).length)
         [0, 1, 3].map(trackOf).forEach((t) => {
@@ -64458,14 +64458,14 @@ html.os-darwin.native-menu #menubar .mproj {
   var bars2 = (n) => n + (n > 1 ? " bars" : " bar");
   function riffPanel(ext = {}) {
     const box = el("div", { class: "riffPanel" });
-    let card = null, strip2 = null, fill2 = null, status3 = null, big = null;
+    let card = null, strip2 = null, fill2 = null, status4 = null, big = null;
     const tick = () => {
       if (!box.isConnected || !strip2) return;
       const n = now();
       if (!n) return;
       const h = heard(), at2 = (h - RIFF.start) / 2;
       big.textContent = n.big;
-      status3.textContent = n.line;
+      status4.textContent = n.line;
       card.className = "riffCard " + n.cls;
       if (n.cls === "wait") {
         const span = Math.max(1, RIFF.start - RIFF.from);
@@ -64496,17 +64496,17 @@ html.os-darwin.native-menu #menubar .mproj {
         sel("Quantize", RIFF.quant, RIFF_QUANT, (v) => riffSet("quant", v), going)
       );
       const more2 = ext.options ? ext.options(going) : [], own = !going && ext.rec && ext.rec() || null;
-      card = strip2 = fill2 = status3 = big = null;
+      card = strip2 = fill2 = status4 = big = null;
       let main;
       if (going) {
         big = el("b", { class: "riffBig", "aria-live": "polite" });
-        status3 = el("span", { class: "riffStat", "aria-live": "polite" });
+        status4 = el("span", { class: "riffStat", "aria-live": "polite" });
         fill2 = el("i");
         strip2 = el("div", { class: "riffStrip" });
         card = el(
           "div",
           { class: "riffCard" },
-          el("div", { class: "riffTop" }, big, status3),
+          el("div", { class: "riffTop" }, big, status4),
           el("div", { class: "riffCount" }, fill2),
           strip2,
           RIFF.miss >= 0 ? el(
@@ -70855,6 +70855,451 @@ html.os-darwin.native-menu #menubar .mproj {
     renderSlots();
   }
 
+  // src/core/song-spec.js
+  var SPEC_FORMAT = "mc707-song";
+  var SPEC_V = 1;
+  var SPEC_BARS = [1, 2, 4, 8, 16];
+  var CLIPS_PER_TRACK = 16;
+  var SCENES_MAX = 128;
+  var SCENE_BARS_MAX = 127;
+  var SONG_BARS_MAX = 512;
+  var ROLE_TYPE = {
+    kit: "drum",
+    hats: "drum",
+    perc: "drum",
+    bass: "tone",
+    chords: "tone",
+    pad: "tone",
+    lead: "tone",
+    pluck: "tone",
+    acid: "tone"
+  };
+  var DEF_ROLES2 = ["kit", "hats", "perc", "bass", "chords", "pad", "lead", "pluck"];
+  var LANE_NAMES = [
+    ["kick", "bd", "k"],
+    ["rim", "rimshot", "rs"],
+    ["snare", "sd", "s"],
+    ["clap", "cp", "c"],
+    ["hat", "chh", "closed hat", "closedhat", "hh", "h"],
+    ["ohat", "ohh", "open hat", "openhat", "oh"],
+    ["ltom", "low tom", "lowtom", "lt"],
+    ["mtom", "mid tom", "midtom", "mt"],
+    ["htom", "high tom", "hightom", "ht"],
+    ["crash", "cr", "cy"],
+    ["ride", "rd"],
+    ["perc", "pc", "cowbell", "shaker", "tamb"]
+  ];
+  var LANE_OF = new Map(LANE_NAMES.flatMap((names, i) => names.map((n) => [n, i])));
+  var GM_LANE = new Map(LANES.map(([, midi], i) => [midi, i]));
+  var KEY_OF2 = {
+    C: 0,
+    "C#": 1,
+    DB: 1,
+    D: 2,
+    "D#": 3,
+    EB: 3,
+    E: 4,
+    F: 5,
+    "F#": 6,
+    GB: 6,
+    G: 7,
+    "G#": 8,
+    AB: 8,
+    A: 9,
+    "A#": 10,
+    BB: 10,
+    B: 11
+  };
+  var specKey = (k2) => k2 == null ? null : KEY_OF2[String(k2).trim().toUpperCase()] ?? null;
+  var ID_RE = /^[A-Za-z0-9_-]{1,40}$/;
+  var specName = (n) => String(n || "").replace(/[^A-Za-z0-9 _-]/g, "-").replace(/\s+/g, " ").trim().slice(0, 16);
+  function specNote(x) {
+    if (typeof x === "number") return Number.isInteger(x) && x >= 0 && x <= 127 ? x : null;
+    const m = /^\s*([A-Ga-g])([#b]?)(-?\d{1,2})\s*$/.exec(String(x));
+    if (!m) return null;
+    const n = (+m[3] + 1) * 12 + { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1].toUpperCase()] + (m[2] === "#" ? 1 : m[2] === "b" ? -1 : 0);
+    return n >= 0 && n <= 127 ? n : null;
+  }
+  function specLane(x) {
+    if (typeof x === "number")
+      return Number.isInteger(x) && x >= 0 && x < 12 ? x : GM_LANE.has(x) ? GM_LANE.get(x) : null;
+    const k2 = String(x).trim().toLowerCase();
+    return LANE_OF.has(k2) ? LANE_OF.get(k2) : null;
+  }
+  var noteParts = (x) => Array.isArray(x) ? { s: x[0], l: x[1], n: x[2], v: x[3] } : x && typeof x === "object" ? x : null;
+  function readNotes(c, at2, type, errs) {
+    const end = c.bars * 16, out2 = [];
+    if (c.notes != null && !Array.isArray(c.notes)) return errs.push(at2 + ".notes: must be a list"), out2;
+    (c.notes || []).forEach((x, j) => {
+      const w = at2 + ".notes[" + j + "]", p = noteParts(x);
+      if (!p) return errs.push(w + ": a note is [start, length, note, velocity]");
+      const s = +p.s, l = p.l == null ? 1 : +p.l, v = p.v == null ? 100 : +p.v;
+      if (!Number.isFinite(s) || s < 0) return errs.push(w + ": start must be a number of 16th steps from 0");
+      if (s >= end)
+        return errs.push(w + ": start " + s + " is past the end of a " + c.bars + "-bar clip (" + end + " steps)");
+      if (!Number.isFinite(l) || l <= 0) return errs.push(w + ": length must be above 0 (16th steps)");
+      if (!Number.isFinite(v) || v < 1 || v > 127) return errs.push(w + ": velocity must be 1 to 127");
+      const n = type === "drum" ? specLane(p.n) : specNote(p.n);
+      if (n == null)
+        return errs.push(
+          w + (type === "drum" ? ": " + JSON.stringify(p.n) + " is not a drum lane (kick, rim, snare, clap, hat, ohat, ltom, mtom, htom, crash, ride, perc)" : ": " + JSON.stringify(p.n) + " is not a note (C4 = 60, or 0 to 127)")
+        );
+      out2.push({ s: Math.round(s * 1e4) / 1e4, l: Math.round(l * 1e4) / 1e4, n, v: Math.round(v) });
+    });
+    return out2.sort((a, b) => a.s - b.s || a.n - b.n);
+  }
+  function readTracks(spec, base, errs, warns) {
+    const tr = base.tracks.map((t, i) => ({
+      role: DEF_ROLES2[i],
+      type: ROLE_TYPE[DEF_ROLES2[i]],
+      name: t.name,
+      sound: null
+    }));
+    if (spec.tracks != null && !Array.isArray(spec.tracks)) return errs.push("tracks: must be a list"), tr;
+    const seen2 = /* @__PURE__ */ new Set();
+    (spec.tracks || []).forEach((x, i) => {
+      const at2 = "tracks[" + i + "]", t = x && +x.track;
+      if (!Number.isInteger(t) || t < 1 || t > 8) return errs.push(at2 + ".track: must be 1 to 8");
+      if (seen2.has(t)) return errs.push(at2 + ".track: track " + t + " is listed twice");
+      seen2.add(t);
+      const o = tr[t - 1];
+      if (x.role != null) {
+        if (!ROLE_TYPE[x.role])
+          return errs.push(
+            at2 + ".role: " + JSON.stringify(x.role) + " is not one of " + Object.keys(ROLE_TYPE).join(", ")
+          );
+        o.role = x.role;
+        o.type = ROLE_TYPE[x.role];
+        if (x.name == null && x.role !== DEF_ROLES2[t - 1]) o.name = x.role[0].toUpperCase() + x.role.slice(1);
+      }
+      if (x.name != null) {
+        o.name = String(x.name).slice(0, 16);
+        if (String(x.name).length > 16) warns.push(at2 + ".name: cut to 16 characters (" + o.name + ")");
+      }
+      if (x.sound != null) o.sound = String(x.sound);
+    });
+    return tr;
+  }
+  function specToSong(spec, o) {
+    const errs = [], warns = [];
+    const fail2 = () => ({ song: null, name: "", errors: errs, warnings: warns, summary: null });
+    if (!spec || typeof spec !== "object" || Array.isArray(spec))
+      return errs.push("the song must be a JSON object"), fail2();
+    if (spec.format !== SPEC_FORMAT) errs.push('format: must be "' + SPEC_FORMAT + '"');
+    if (spec.v !== SPEC_V) errs.push("v: must be " + SPEC_V);
+    const bpm = +spec.bpm;
+    if (!Number.isFinite(bpm) || bpm < 40 || bpm > 240) errs.push("bpm: must be 40 to 240");
+    const swing = spec.swing == null ? 50 : +spec.swing;
+    if (!Number.isFinite(swing) || swing < 50 || swing > 75) errs.push("swing: must be 50 (straight) to 75");
+    const key = spec.key == null ? 0 : specKey(spec.key);
+    if (key == null) errs.push("key: " + JSON.stringify(spec.key) + " is not a key (C, C#, Db ... B)");
+    const scale = spec.scale == null ? "minor" : String(spec.scale);
+    if (!SCALES[scale]) errs.push("scale: must be one of " + Object.keys(SCALES).join(", "));
+    const tracks3 = readTracks(spec, o.base, errs, warns);
+    if (errs.length) return fail2();
+    const clips = readClips(spec, tracks3, errs, warns);
+    const scenes = clips ? readScenes(spec, clips, errs, warns) : null;
+    if (errs.length || !clips || !scenes) return fail2();
+    const song = build3(o.base, { bpm, swing, key, scale, tracks: tracks3, clips, scenes }, o.findSound, warns);
+    if (!song) return errs.push("the song is longer than the " + SONG_BARS_MAX + " bars the Toolbox holds"), fail2();
+    const name = specName(spec.name);
+    if (spec.name != null && name !== String(spec.name))
+      warns.push('name: written as "' + name + '" (16 characters: letters, digits, space, - and _)');
+    return {
+      song,
+      name,
+      errors: [],
+      warnings: warns,
+      summary: {
+        scenes: scenes.length,
+        clips: clips.length,
+        bars: scenes.reduce((a, r) => a + r.bars, 0),
+        bpm,
+        tracks: tracks3.map((t, i) => ({
+          track: i + 1,
+          role: t.role,
+          name: t.name,
+          clips: clips.filter((c) => c.t === i).length
+        }))
+      }
+    };
+  }
+  function readClips(spec, tracks3, errs, warns) {
+    if (!Array.isArray(spec.clips) || !spec.clips.length)
+      return errs.push("clips: must be a list with at least one clip"), null;
+    const ids = /* @__PURE__ */ new Set(), perTrack = Array(8).fill(0), out2 = [];
+    spec.clips.forEach((c, i) => {
+      const at2 = "clips[" + i + "]";
+      if (!c || typeof c !== "object") return errs.push(at2 + ": must be an object");
+      if (typeof c.id !== "string" || !ID_RE.test(c.id))
+        return errs.push(at2 + ".id: letters, digits, _ and - only (up to 40)");
+      if (ids.has(c.id)) return errs.push(at2 + '.id: "' + c.id + '" is used twice');
+      ids.add(c.id);
+      const t = +c.track;
+      if (!Number.isInteger(t) || t < 1 || t > 8) return errs.push(at2 + ".track: must be 1 to 8");
+      if (!SPEC_BARS.includes(+c.bars)) return errs.push(at2 + ".bars: must be one of " + SPEC_BARS.join(", "));
+      if (perTrack[t - 1] >= CLIPS_PER_TRACK)
+        return errs.push(at2 + ": track " + t + " already has 16 clips (the MC-707 holds 16 a track)");
+      const type = tracks3[t - 1].type;
+      const tr = c.transpose == null ? 0 : +c.transpose;
+      if (!Number.isInteger(tr) || tr < -48 || tr > 48) return errs.push(at2 + ".transpose: a whole number -48 to 48");
+      if (tr && type === "drum") warns.push(at2 + ".transpose: ignored on a drum track");
+      const name = c.name == null ? c.id : String(c.name);
+      if (name.length > 16) warns.push(at2 + ".name: cut to 16 characters");
+      const notes = readNotes({ ...c, bars: +c.bars }, at2, type, errs);
+      out2.push({
+        id: c.id,
+        t: t - 1,
+        k: perTrack[t - 1]++,
+        bars: +c.bars,
+        name: name.slice(0, 16),
+        sound: c.sound == null ? null : String(c.sound),
+        tr: type === "tone" ? tr : 0,
+        type,
+        notes,
+        at: at2
+      });
+    });
+    return out2;
+  }
+  function readScenes(spec, clips, errs, warns) {
+    if (!Array.isArray(spec.scenes) || !spec.scenes.length)
+      return errs.push("scenes: must be a list with at least one scene"), null;
+    if (spec.scenes.length > SCENES_MAX)
+      return errs.push("scenes: " + spec.scenes.length + " scenes; the MC-707 holds " + SCENES_MAX), null;
+    const byId = new Map(clips.map((c) => [c.id, c]));
+    return spec.scenes.map((r, i) => {
+      const at2 = "scenes[" + i + "]", pick5 = Array(8).fill(-1);
+      const bars3 = r && +r.bars;
+      if (!Number.isInteger(bars3) || bars3 < 1 || bars3 > SCENE_BARS_MAX)
+        errs.push(at2 + ".bars: a whole number 1 to " + SCENE_BARS_MAX);
+      const name = String(r && r.name || "Scene " + (i + 1));
+      if (name.length > 16) warns.push(at2 + ".name: cut to 16 characters");
+      const play3 = r && r.play;
+      if (!Array.isArray(play3)) errs.push(at2 + ".play: a list of clip ids");
+      else
+        play3.forEach((id, j) => {
+          const c = byId.get(id);
+          if (!c) return errs.push(at2 + ".play[" + j + "]: no clip has the id " + JSON.stringify(id));
+          if (pick5[c.t] >= 0)
+            return errs.push(at2 + ".play[" + j + "]: track " + (c.t + 1) + " already plays another clip in this scene");
+          pick5[c.t] = c.k;
+        });
+      return { name: name.slice(0, 16), bars: bars3, pick: pick5 };
+    });
+  }
+  function build3(base, d, findSound, warns) {
+    const s = JSON.parse(JSON.stringify(base));
+    const total = d.scenes.reduce((a, r) => a + r.bars, 0);
+    if (total > SONG_BARS_MAX) return null;
+    let id = Math.max(1, +s.nextId || 1);
+    Object.assign(s, {
+      bpm: Math.round(d.bpm * 100) / 100,
+      swing: d.swing,
+      key: d.key,
+      scale: d.scale,
+      patterns: {},
+      clips: [],
+      markers: [],
+      clipMarks: [],
+      cursor: 0
+    });
+    s.loop = { on: false, start: 0, end: 8 };
+    s.tracks = s.tracks.map((t, i) => {
+      const x = { ...t, name: d.tracks[i].name, type: d.tracks[i].type };
+      if (d.tracks[i].role === DEF_ROLES2[i]) delete x.role;
+      else x.role = d.tracks[i].role;
+      return x;
+    });
+    const q = {
+      v: 2,
+      first: 0,
+      clips: Array.from({ length: 8 }, () => Array(16).fill(null)),
+      rows: [],
+      tones: {},
+      done: { c: {}, s: {}, p: {} }
+    };
+    const missing = /* @__PURE__ */ new Set();
+    for (const c of d.clips) {
+      const pid = "p" + id++;
+      s.patterns[pid] = {
+        id: pid,
+        name: c.name,
+        type: c.type,
+        bars: c.bars,
+        notes: c.notes,
+        mod: false,
+        key: c.type === "tone" ? { root: d.key, scale: d.scale } : null
+      };
+      const cell = { pat: pid };
+      if (c.tr) cell.tr = c.tr;
+      const want = c.sound || d.tracks[c.t].sound;
+      if (want) {
+        const kind = c.type === "drum" ? "kit" : "tone", f = findSound ? findSound(want, kind) : null;
+        if (f && f.tone && f.tone.kind === kind) {
+          q.tones[f.key] = f.tone;
+          cell.tone = f.key;
+        } else if (!missing.has(want + kind)) {
+          missing.add(want + kind);
+          warns.push(
+            c.at + ": no " + (kind === "kit" ? "factory kit" : "tone") + ' named "' + want + '" in the Sound library; the clip keeps the template’s sound (list_sounds lists them)'
+          );
+        }
+      }
+      q.clips[c.t][c.k] = cell;
+    }
+    q.rows = d.scenes.map((r) => ({ id: "r" + id++, name: r.name, bars: r.bars, pick: r.pick }));
+    s.scn = q;
+    layOut(s, q, () => "c" + id++);
+    s.bars = Math.min(SONG_BARS_MAX, Math.max(8, Math.ceil((total + 4) / 8) * 8));
+    s.nextId = id;
+    return s;
+  }
+  function layOut(s, q, nextClipId) {
+    let at2 = 0;
+    const open2 = Array(8).fill(null);
+    const shut = (t) => open2[t] && (s.clips.push(open2[t].clip), open2[t] = null);
+    for (const r of q.rows) {
+      s.markers.push({ bar: at2, name: r.name });
+      for (let t = 0; t < 8; t++) {
+        const k2 = r.pick[t], c = k2 >= 0 ? q.clips[t][k2] : null;
+        if (open2[t] && open2[t].k === k2) open2[t].clip.len += r.bars;
+        else {
+          shut(t);
+          if (c) {
+            const clip = { id: nextClipId(), t, start: at2, len: r.bars, off: 0, pat: c.pat };
+            if (c.tr) clip.tr = c.tr;
+            open2[t] = { k: k2, clip };
+          }
+        }
+      }
+      at2 += r.bars;
+    }
+    for (let t = 0; t < 8; t++) shut(t);
+  }
+  function songToSpec(s, made3, name) {
+    const tones = made3.tones || {}, tracks3 = [], clips = [];
+    const idOf = (t, k2) => "t" + (t + 1) + "c" + (k2 + 1);
+    for (let t = 0; t < 8; t++) {
+      const tr = s.tracks[t], role = tr.role || DEF_ROLES2[t];
+      tracks3.push({
+        track: t + 1,
+        role: ROLE_TYPE[role] === tr.type ? role : tr.type === "drum" ? "kit" : "lead",
+        name: tr.name
+      });
+      for (let k2 = 0; k2 < 16; k2++) {
+        const c = made3.clips[t] && made3.clips[t][k2], p = c && s.patterns[c.pat];
+        if (!p) continue;
+        const drum = p.type === "drum";
+        const o = {
+          id: idOf(t, k2),
+          track: t + 1,
+          bars: p.bars,
+          name: String(p.name || "").slice(0, 16),
+          notes: p.notes.map((n) => [n.s, n.l, drum ? LANE_NAMES[n.n] ? LANE_NAMES[n.n][0] : n.n : noteName4(n.n), n.v])
+        };
+        if (c.tr) o.transpose = c.tr;
+        if (c.tone && tones[c.tone]) o.sound = tones[c.tone].name;
+        clips.push(o);
+      }
+    }
+    return {
+      format: SPEC_FORMAT,
+      v: SPEC_V,
+      name: specName(name),
+      bpm: s.bpm,
+      swing: s.swing,
+      key: NOTE_NAMES[s.key] || "C",
+      scale: s.scale,
+      tracks: tracks3,
+      clips,
+      scenes: made3.rows.map((r) => ({
+        name: r.name,
+        bars: r.bars,
+        play: r.pick.map(
+          (k2, t) => k2 >= 0 && made3.clips[t] && made3.clips[t][k2] && s.patterns[made3.clips[t][k2].pat] ? idOf(t, k2) : null
+        ).filter(Boolean)
+      }))
+    };
+  }
+  var noteName4 = (n) => NOTE_NAMES[(n % 12 + 12) % 12] + (Math.floor(n / 12) - 1);
+
+  // src/ui/song-file.js
+  var norm = (n) => String(n || "").toLowerCase().replace(/\s+/g, " ").trim();
+  async function soundFinder() {
+    await soundsLoad();
+    const idx = { tone: /* @__PURE__ */ new Map(), kit: /* @__PURE__ */ new Map() };
+    const put5 = (e) => {
+      const k2 = norm(e.name);
+      if (e.kind === "kit" && !e.mpj) return;
+      if (!idx[e.kind] || idx[e.kind].has(k2)) return;
+      idx[e.kind].set(k2, e);
+    };
+    ZS.list.filter((e) => e.src === "factory").forEach(put5);
+    ZS.list.filter((e) => e.src !== "factory").forEach(put5);
+    return (name, kind) => {
+      const e = idx[kind] && idx[kind].get(norm(name));
+      if (!e) return null;
+      const tone2 = { name: e.name.slice(0, 16), kind: e.kind, d: e.d };
+      if (e.mpj) tone2.mpj = e.mpj;
+      return { key: hashOf(e.kind, e.d) + (e.mpj ? ":kit" : ""), tone: tone2 };
+    };
+  }
+  function clipLosses(song) {
+    const out2 = [];
+    if (!song.scn) return out2;
+    for (let t = 0; t < 8; t++)
+      song.scn.clips[t].forEach((c, k2) => {
+        const p = c && song.patterns[c.pat];
+        if (!p) return;
+        const enc = encodePattern(p, p.type);
+        if (enc.error) out2.push("track " + (t + 1) + " clip " + (k2 + 1) + ": " + enc.error);
+        else if (enc.skipped) out2.push("track " + (t + 1) + " clip " + (k2 + 1) + ": " + lostText(enc));
+      });
+    return out2;
+  }
+  async function loadSongFile(spec, o = {}) {
+    if (DEV !== "707")
+      return {
+        ok: false,
+        applied: false,
+        name: "",
+        errors: ["the Toolbox is set to the MC-101: switch Settings > Device to MC-707 first"],
+        warnings: [],
+        summary: null
+      };
+    const r = specToSong(spec, { base: newState(), findSound: await soundFinder() });
+    if (!r.song) return { ok: false, applied: false, name: "", errors: r.errors, warnings: r.warnings, summary: null };
+    const warnings = [...r.warnings, ...clipLosses(r.song).map((x) => "not on the MC-707: " + x)];
+    if (o.dryRun) return { ok: true, applied: false, name: r.name, errors: [], warnings, summary: r.summary };
+    stopAll();
+    pushUndo();
+    const out2 = S.midiOut, outIn = S.midiIn;
+    replaceState(fixState(r.song));
+    S.midiOut = out2;
+    S.midiIn = outIn;
+    UI.sel = null;
+    afterReplaceKeepUndo();
+    PROJ.name = r.name || PROJ.name;
+    PROJ.path = "";
+    PROJ.dirty = true;
+    return { ok: true, applied: true, name: r.name, errors: [], warnings, summary: r.summary };
+  }
+  function songFileNow() {
+    const own = !!(S.scn && S.scn.rows.length), made3 = own ? S.scn : { ...songToRows(), tones: {} };
+    const spec = songToSpec(S, made3, PROJ.name || "Toolbox song");
+    const warnings = [];
+    if (!own)
+      warnings.push(
+        "Scene Mode has no scenes: these were made from Song Mode, as Save as MC-707 project would make them"
+      );
+    for (const c of spec.clips)
+      if (!SPEC_BARS.includes(c.bars))
+        warnings.push(c.id + ": " + c.bars + " bars; load_song takes " + SPEC_BARS.join(", "));
+    if (made3.over) warnings.push(made3.over + " patterns left out (a track holds 16 clips)");
+    return { song: spec, warnings };
+  }
+
   // src/ui/projects.js
   function projTitle() {
     const n = PROJ.name || "Untitled";
@@ -70885,6 +71330,7 @@ html.os-darwin.native-menu #menubar .mproj {
     let s;
     try {
       s = JSON.parse(text3);
+      if (s && s.format === SPEC_FORMAT) return projLoadSongFile(s, name);
       if (!s || s.v !== 1 || !Array.isArray(s.tracks) || s.tracks.length !== 8 || !s.patterns || !Array.isArray(s.clips))
         throw 0;
     } catch (e) {
@@ -70904,6 +71350,20 @@ html.os-darwin.native-menu #menubar .mproj {
     if (path2) projRecent(path2);
     projTitle();
     toast("Opened " + (PROJ.name || "project"));
+    return true;
+  }
+  async function projLoadSongFile(spec, name) {
+    stopAll();
+    const r = await loadSongFile(spec);
+    if (!r.applied) {
+      toast("That song file has " + r.errors.length + " error(s): " + r.errors.slice(0, 2).join("; "));
+      return false;
+    }
+    PROJ.name = r.name || (name || "").replace(/\.json$/i, "");
+    projTitle();
+    toast(
+      "Opened the song file " + (PROJ.name || "") + ": " + r.summary.scenes + " scenes, " + r.summary.clips + " clips" + (r.warnings.length ? " (" + r.warnings.length + " warnings: " + r.warnings[0] + ")" : "")
+    );
     return true;
   }
   var projText = () => JSON.stringify(S, null, 1);
@@ -73564,7 +74024,7 @@ html.os-darwin.native-menu #menubar .mproj {
       if (unhook) unhook();
       unhook = null;
     };
-    const play2 = (s) => {
+    const play3 = (s) => {
       ensureAudio();
       stopAll();
       const ch = s.loop ? loopAudio(u8, s.loop) : sampleAudio(u8, s), buf = AU.ctx.createBuffer(ch.length, ch[0].length, s.rate || 44100);
@@ -73633,7 +74093,7 @@ html.os-darwin.native-menu #menubar .mproj {
       (s, i) => el(
         "div",
         { class: "mpjSmp" },
-        el("button", { type: "button", class: "btn sm", title: "Play it", onclick: () => play2(s) }, "▶"),
+        el("button", { type: "button", class: "btn sm", title: "Play it", onclick: () => play3(s) }, "▶"),
         el("b", {}, s.name),
         el(
           "span",
@@ -73656,7 +74116,7 @@ html.os-darwin.native-menu #menubar .mproj {
       (l) => el(
         "div",
         { class: "mpjSmp" },
-        el("button", { type: "button", class: "btn sm", title: "Play it", onclick: () => play2({ loop: l }) }, "▶"),
+        el("button", { type: "button", class: "btn sm", title: "Play it", onclick: () => play3({ loop: l }) }, "▶"),
         el("b", {}, "Track " + (l.track + 1) + " · clip " + (l.clip + 1)),
         el("span", { class: "hint" }, "mono · " + (l.bytes / 4 / 44100).toFixed(2) + " s · 44.1 kHz"),
         el(
@@ -75763,6 +76223,420 @@ html.os-darwin.native-menu #menubar .mproj {
     toast("Recording " + bars3 + (bars3 === 1 ? " bar" : " bars") + " of " + p.name + " on " + S.tracks[t].name);
   }
 
+  // src/ui/mcp-guide.js
+  var SONG_GUIDE = `MC-707 song file ("mc707-song", version 1)
+
+How the MC-707 plays a song
+- 8 tracks. Each track holds 16 clips; one clip plays on a track at a time.
+- A scene picks one clip (or none) for each track and lasts so many bars. The scene chain plays the
+  scenes in order and stops after the last one. Clips shorter than the scene loop.
+- So: write each part's variations as separate clips (verse bass, chorus bass, fill beat), then the
+  arrangement as scenes that switch between them. Silence on a track = leave it out of the scene.
+- Drum tracks play a kit: notes are drum lanes. Tone tracks play one tone: notes are pitches.
+
+Top level: format "mc707-song", v 1, name (16 chars), bpm 40-240, swing 50-75 (optional),
+key C..B (optional), scale (optional), tracks (optional), clips, scenes.
+
+tracks: [{track 1-8, role, name?, sound?}]
+  roles: kit, hats, perc (drum tracks); bass, chords, pad, lead, pluck, acid (tone tracks).
+  Default roles of tracks 1-8: kit, hats, perc, bass, chords, pad, lead, pluck.
+  sound: a tone name (tone track) or factory kit name (drum track) from list_sounds; every clip on the
+  track gets it unless the clip names its own.
+
+clips: [{id, track 1-8, bars, name?, sound?, transpose?, notes}]
+  bars: ${SPEC_BARS.join(", ")}. A track's clips are numbered 1-16 in the order listed.
+  note: [start, length, note, velocity]
+    start and length in 16th steps (a bar is 16), start from 0 to bars*16, fractions allowed (triplets 2/3).
+    tone tracks: note name (C4 = MIDI 60, F#2, Bb1) or MIDI number.
+    drum tracks: lane ${LANE_NAMES.map((n) => n[0]).join(", ")} (or 0-11).
+    velocity 1-127, default 100. Length default 1.
+
+scenes: [{name, bars 1-127, play: [clip ids, at most one per track]}], 1 to 128 scenes, in play order.
+
+scales: ${Object.keys(SCALES).join(", ")}.
+
+Tips
+- Sounds: use names from the Toolbox Sound library (the MCP tool list_sounds lists them). Without that
+  list, leave sound out: the clip keeps the project's default sound, and it can be changed on the MC-707.
+- Keep the bass in octaves 1-2, chords and pads 3-4, leads 4-5.
+- With the MCP server: load_song with dry_run true checks a song without changing anything;
+  compose_song writes one with the Toolbox's own composer and get_song returns it in this format to
+  edit; save_project writes the .mpj to the SD card (ROLAND/GROOVEBOX/PROJECT).`;
+  var SONG_EXAMPLE = {
+    format: "mc707-song",
+    v: 1,
+    name: "EXAMPLE",
+    bpm: 122,
+    swing: 54,
+    key: "A",
+    scale: "minor",
+    tracks: [
+      { track: 1, role: "kit", name: "Drums" },
+      { track: 4, role: "bass", name: "Bass" },
+      { track: 5, role: "chords", name: "Chords" },
+      { track: 7, role: "lead", name: "Lead" }
+    ],
+    clips: [
+      {
+        id: "beat",
+        track: 1,
+        bars: 1,
+        notes: [
+          [0, 1, "kick", 120],
+          [4, 1, "kick", 115],
+          [8, 1, "kick", 120],
+          [12, 1, "kick", 115],
+          [4, 1, "clap", 100],
+          [12, 1, "clap", 100],
+          [2, 1, "hat", 70],
+          [6, 1, "hat", 80],
+          [10, 1, "hat", 70],
+          [14, 1, "ohat", 85]
+        ]
+      },
+      {
+        id: "beat_fill",
+        track: 1,
+        bars: 1,
+        notes: [
+          [0, 1, "kick", 120],
+          [4, 1, "clap", 100],
+          [8, 1, "kick", 120],
+          [12, 1, "snare", 90],
+          [13, 1, "snare", 95],
+          [14, 1, "snare", 105],
+          [15, 1, "snare", 115]
+        ]
+      },
+      {
+        id: "kick_only",
+        track: 1,
+        bars: 1,
+        notes: [
+          [0, 1, "kick", 110],
+          [4, 1, "kick", 105],
+          [8, 1, "kick", 110],
+          [12, 1, "kick", 105]
+        ]
+      },
+      {
+        id: "bass",
+        track: 4,
+        bars: 2,
+        notes: [
+          [0, 2, "A1", 110],
+          [3, 1, "A2", 90],
+          [6, 2, "A1", 105],
+          [10, 2, "C2", 100],
+          [16, 2, "F1", 110],
+          [19, 1, "F2", 90],
+          [22, 2, "G1", 105],
+          [26, 2, "G2", 95]
+        ]
+      },
+      {
+        id: "chords",
+        track: 5,
+        bars: 2,
+        notes: [
+          [0, 14, "A3", 85],
+          [0, 14, "C4", 85],
+          [0, 14, "E4", 85],
+          [16, 6, "F3", 85],
+          [16, 6, "A3", 85],
+          [16, 6, "C4", 85],
+          [24, 6, "G3", 85],
+          [24, 6, "B3", 85],
+          [24, 6, "D4", 85]
+        ]
+      },
+      {
+        id: "hook",
+        track: 7,
+        bars: 2,
+        notes: [
+          [0, 2, "E5", 100],
+          [3, 1, "D5", 90],
+          [4, 2, "C5", 95],
+          [8, 4, "A4", 100],
+          [16, 2, "C5", 100],
+          [19, 1, "B4", 90],
+          [20, 2, "G4", 95],
+          [24, 6, "A4", 100]
+        ]
+      }
+    ],
+    scenes: [
+      { name: "Intro", bars: 8, play: ["kick_only", "chords"] },
+      { name: "Groove", bars: 15, play: ["beat", "bass", "chords"] },
+      { name: "Fill", bars: 1, play: ["beat_fill", "bass", "chords"] },
+      { name: "Hook", bars: 16, play: ["beat", "bass", "chords", "hook"] },
+      { name: "Outro", bars: 8, play: ["kick_only", "chords"] }
+    ]
+  };
+
+  // src/ui/mcp-tools.js
+  var RO = { readOnlyHint: true };
+  var NONE2 = { type: "object", properties: {}, additionalProperties: false };
+  var MCP_TOOLS = [
+    {
+      name: "status",
+      description: "What the MC-707 Toolbox has now: the device (must be MC-707), the MIDI out, how many factory sounds are in the Sound library, whether the MC-707 SD card is found, and the song (tempo, scenes, clips, bars).",
+      inputSchema: NONE2,
+      annotations: RO
+    },
+    {
+      name: "song_format",
+      description: "The song file format (mc707-song v1) with one complete example. Read this before writing a song for load_song.",
+      inputSchema: NONE2,
+      annotations: RO
+    },
+    {
+      name: "list_sounds",
+      description: "Tones and drum kits in the Toolbox Sound library, by name, for the sound fields of a song. Factory sounds appear once imported from the MC-707 update file (Sound browser > Grab from > Factory tones and kits).",
+      inputSchema: {
+        type: "object",
+        properties: {
+          kind: { type: "string", enum: ["tone", "kit"], description: "tone (tone tracks) or kit (drum tracks)" },
+          type: {
+            type: "string",
+            description: "instrument type: keys, organ, bell, guitar, bass, strings, brass, vox, lead, pad, pluck, fx, drums, other"
+          },
+          search: { type: "string", description: "words in the name" },
+          limit: { type: "integer", minimum: 1, maximum: 400, default: 60 }
+        },
+        additionalProperties: false
+      },
+      annotations: RO
+    },
+    {
+      name: "list_styles",
+      description: "The styles the Toolbox composer can write a song in (for compose_song).",
+      inputSchema: NONE2,
+      annotations: RO
+    },
+    {
+      name: "compose_song",
+      description: "The Toolbox composer writes a whole song in a style (every part from one chord progression, with sections, fills and builds) and gives each clip a factory sound. Replaces the song in the app (Undo brings it back). get_song then returns it to edit.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          style: { type: "string", description: "a style id from list_styles" },
+          key: { type: "string", description: "key root C ... B (default: the style picks)" },
+          bpm: { type: "number", minimum: 40, maximum: 240 },
+          minutes: { type: "number", minimum: 1, maximum: 10, default: 4 },
+          seed: { type: "integer", description: "another number gives another take", default: 1 },
+          sounds: { type: "boolean", default: true, description: "give each clip a factory tone or kit" }
+        },
+        required: ["style"],
+        additionalProperties: false
+      }
+    },
+    {
+      name: "load_song",
+      description: "Check a song file (format mc707-song, see song_format) and put it in the app in place of the song (one Undo step). With dry_run, only check. Returns errors (nothing changed), warnings and a summary.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          song: { type: "object", description: "the song file" },
+          dry_run: { type: "boolean", default: false }
+        },
+        required: ["song"],
+        additionalProperties: false
+      }
+    },
+    {
+      name: "get_song",
+      description: "The song in the app now, as a song file (mc707-song), to read, change and load again.",
+      inputSchema: NONE2,
+      annotations: RO
+    },
+    {
+      name: "play",
+      description: "Play the scene chain through the MC-707 over USB MIDI, from a scene (1 = the first).",
+      inputSchema: {
+        type: "object",
+        properties: { scene: { type: "integer", minimum: 1, default: 1 }, loop: { type: "boolean", default: false } },
+        additionalProperties: false
+      }
+    },
+    { name: "stop", description: "Stop playback.", inputSchema: NONE2 },
+    {
+      name: "save_project",
+      description: "Write the song as an MC-707 project (.mpj): to the SD card (ROLAND/GROOVEBOX/PROJECT) or to the Toolbox Projects folder. Also saves the Toolbox song file there. Never replaces a file unless overwrite is true. Returns the paths, anything left out, and the steps on the MC-707.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          name: { type: "string", description: "project name, 16 characters (default: the song name)" },
+          to: { type: "string", enum: ["card", "folder"], default: "card" },
+          overwrite: { type: "boolean", default: false }
+        },
+        additionalProperties: false
+      }
+    }
+  ];
+  var songNow = () => ({
+    name: PROJ.name || "",
+    bpm: S.bpm,
+    scenes: S.scn ? S.scn.rows.length : 0,
+    clips: S.scn ? S.scn.clips.flat().filter(Boolean).length : 0,
+    bars: S.scn ? S.scn.rows.reduce((a, r) => a + r.bars, 0) : 0
+  });
+  async function status3() {
+    await soundsLoad();
+    const n = (src, kind) => ZS.list.filter((e) => (src ? e.src === src : e.src !== "factory") && e.kind === kind).length;
+    const card = HOST && HOST.mcpCard ? await HOST.mcpCard() : null;
+    return {
+      device: DEV === "707" ? "MC-707" : "MC-101 (switch Settings > Device to MC-707 to make MC-707 projects)",
+      midi_out: MIDI.out ? MIDI.out.name : null,
+      playing: !!TR.playing,
+      sounds: {
+        factory_tones: n("factory", "tone"),
+        factory_kits: ZS.list.filter((e) => e.src === "factory" && e.kind === "kit" && e.mpj).length,
+        other_tones: n(null, "tone"),
+        other_kits: n(null, "kit"),
+        note: n("factory", "tone") === 0 ? "No factory sounds yet: in the Toolbox, Sound browser > Grab from > Factory tones and kits, with the MC-707 update file (MC707_UPA_up.bin)." : void 0
+      },
+      card,
+      song: songNow()
+    };
+  }
+  async function listSounds(a) {
+    await soundsLoad();
+    const words = String(a.search || "").toLowerCase().split(/\s+/).filter(Boolean);
+    const list2 = ZS.list.filter((e) => (!a.kind || e.kind === a.kind) && (!a.type || e.type === a.type)).filter((e) => e.kind !== "kit" || e.mpj || e.src !== "factory").filter((e) => words.every((w) => e.name.toLowerCase().includes(w))).sort((x, y) => (y.src === "factory") - (x.src === "factory") || x.name.localeCompare(y.name));
+    const lim = Math.max(1, Math.min(400, +a.limit || 60));
+    return {
+      total: list2.length,
+      sounds: list2.slice(0, lim).map((e) => ({
+        name: e.name,
+        kind: e.kind,
+        type: e.type,
+        from: e.src === "factory" ? "factory" + (e.bank ? " " + e.bank + (e.no ? "-" + e.no : "") : "") : e.src,
+        ...e.kind === "kit" && !e.mpj ? { note: "not a factory kit: stays out of a project file" } : {}
+      }))
+    };
+  }
+  var listStyles = () => ({
+    styles: STYLES.map((s) => ({
+      id: s.id,
+      name: s.name,
+      family: s.fam,
+      bpm: s.bpm ? { low: s.bpm[0], high: s.bpm[1], usual: s.bpm[2] } : null,
+      keys: (s.keys || []).map((k2) => k2[1]),
+      vibe: s.vibe
+    }))
+  });
+  function compose3(a) {
+    if (DEV !== "707") throw new Error("switch Settings > Device to MC-707 first");
+    const st = STYLES.find((s) => s.id === a.style);
+    if (!st) throw new Error("no style " + JSON.stringify(a.style) + "; list_styles gives them");
+    const key = a.key == null ? st.keys && st.keys[0] ? st.keys[0][0] : 0 : specKey(a.key);
+    if (key == null) throw new Error("key: C, C#, Db ... B");
+    const r = composeNow(st.id, {
+      key,
+      bpm: a.bpm || (st.bpm ? st.bpm[2] : 120),
+      minutes: a.minutes || 4,
+      seed: a.seed || 1,
+      sounds: a.sounds !== false
+    });
+    PROJ.name = PROJ.name || specName(st.name);
+    PROJ.dirty = true;
+    projTitle();
+    return { ...r, song: songNow() };
+  }
+  function play2(a) {
+    if (!S.scn || !S.scn.rows.length) throw new Error("the song has no scenes yet");
+    const i = Math.max(1, Math.min(S.scn.rows.length, +a.scene || 1));
+    scenePlay(i - 1, !!a.loop);
+    return {
+      playing: true,
+      from_scene: i,
+      loop: !!a.loop,
+      midi_out: MIDI.out ? MIDI.out.name : null,
+      note: MIDI.out ? void 0 : "No MIDI out chosen: only the app’s preview sound plays. Connect the MC-707 over USB."
+    };
+  }
+  async function saveProject(a) {
+    if (!HOST || !HOST.mcpSave) throw new Error("saving needs the desktop app");
+    const name = specName(a.name || PROJ.name || "Toolbox song") || "Toolbox song";
+    const made3 = await mpjBytes(name);
+    if (made3.error) throw new Error(made3.error);
+    const r = await HOST.mcpSave({
+      name,
+      bytes: made3.bytes,
+      to: a.to === "folder" ? "folder" : "card",
+      overwrite: !!a.overwrite,
+      songText: JSON.stringify(S, null, 1)
+    });
+    if (r.error) return { saved: false, error: r.error, card: r.card };
+    PROJ.name = name;
+    PROJ.path = r.song || PROJ.path;
+    PROJ.dirty = !r.song;
+    projTitle();
+    toast("Saved " + name + ".mpj" + (r.to === "card" ? " on the MC-707 card" : ""));
+    return {
+      saved: true,
+      mpj: r.mpj,
+      song_file: r.song,
+      ...r.songKept ? { note: r.songKept + " is already there and was kept (overwrite true replaces it)" } : {},
+      clips: made3.song.clips.length,
+      scenes: made3.song.scenes.length,
+      left_out: made3.song.lost,
+      on_the_mc707: r.to === "card" ? [
+        "Eject the card (or leave storage mode).",
+        "PROJECT > LOAD, pick " + name + ", ENTER.",
+        "Press PLAY: the scene chain is on."
+      ] : [
+        "Copy " + name + ".mpj to the card, into ROLAND/GROOVEBOX/PROJECT.",
+        "PROJECT > LOAD, pick " + name + ", ENTER.",
+        "Press PLAY: the scene chain is on."
+      ]
+    };
+  }
+  var RUN = {
+    status: status3,
+    song_format: () => ({ guide: SONG_GUIDE, example: SONG_EXAMPLE }),
+    list_sounds: listSounds,
+    list_styles: listStyles,
+    compose_song: compose3,
+    load_song: async (a) => {
+      const r = await loadSongFile(typeof a.song === "string" ? JSON.parse(a.song) : a.song, { dryRun: !!a.dry_run });
+      if (r.applied) projTitle();
+      return r;
+    },
+    get_song: songFileNow,
+    play: play2,
+    stop: () => (stopAll(), { playing: false }),
+    save_project: saveProject
+  };
+  async function mcpHandle(method, params) {
+    if (method === "tools/list") return { tools: MCP_TOOLS };
+    if (method !== "tools/call") throw new Error("unknown method " + method);
+    const name = params && params.name, run2 = RUN[name];
+    if (!run2) return { content: [{ type: "text", text: "No tool named " + name }], isError: true };
+    try {
+      const out2 = await run2(params && params.arguments || {});
+      const bad = out2 && (out2.ok === false || out2.saved === false);
+      return { content: [{ type: "text", text: JSON.stringify(out2, null, 1) }], ...bad ? { isError: true } : {} };
+    } catch (e) {
+      return { content: [{ type: "text", text: String(e && e.message || e) }], isError: true };
+    }
+  }
+  function initMcp() {
+    if (!HOST || !HOST.mcpOnCall) return;
+    HOST.mcpOnCall(async (id, method, params) => {
+      let reply;
+      try {
+        reply = { result: await mcpHandle(method, params) };
+      } catch (e) {
+        reply = { error: String(e && e.message || e) };
+      }
+      HOST.mcpReply(id, reply);
+    });
+    HOST.mcpReady();
+  }
+
   // src/zen/zc-scan.js
   var BLOCK = 128;
   var WHOLE = [
@@ -75854,7 +76728,7 @@ html.os-darwin.native-menu #menubar .mproj {
     const name = DEVS[DEV].name;
     if (knobs !== true) knobs = false;
     scans.length = 0;
-    const out2 = el("pre", { class: "sfOut" }, "No scans yet."), status3 = el("div", { class: "hint", role: "status", "aria-live": "polite" }, ""), fill2 = el("i", {}), bar2 = el("div", { class: "wpBar" }, fill2);
+    const out2 = el("pre", { class: "sfOut" }, "No scans yet."), status4 = el("div", { class: "hint", role: "status", "aria-live": "polite" }, ""), fill2 = el("i", {}), bar2 = el("div", { class: "wpBar" }, fill2);
     let log = [];
     const show = () => out2.textContent = log.join("\n") || "No scans yet.";
     const scan = el(
@@ -75869,7 +76743,7 @@ html.os-darwin.native-menu #menubar .mproj {
           try {
             const mem = await scanOnce(
               (t, f) => {
-                status3.textContent = "Scan " + n + ": " + t;
+                status4.textContent = "Scan " + n + ": " + t;
                 fill2.style.width = Math.round(f * 100) + "%";
               },
               300,
@@ -75886,7 +76760,7 @@ html.os-darwin.native-menu #menubar .mproj {
               );
               if (d.length > 300) log.push("… and " + (d.length - 300) + " more");
             }
-            status3.textContent = "Scan " + n + " done (" + mem.size + " bytes). Now make the next change, then Scan again.";
+            status4.textContent = "Scan " + n + " done (" + mem.size + " bytes). Now make the next change, then Scan again.";
             fill2.style.width = "100%";
           } finally {
             scan.disabled = false;
@@ -75952,7 +76826,7 @@ html.os-darwin.native-menu #menubar .mproj {
           el("li", {}, "Press Save scans to a file (it goes to your Downloads), and Copy results into the chat.")
         ),
         el("div", { style: "display:flex;gap:8px;align-items:center;flex-wrap:wrap" }, scan, copy, save5),
-        status3,
+        status4,
         bar2,
         out2,
         el(
@@ -76731,6 +77605,7 @@ html.os-darwin.native-menu #menubar .mproj {
       pump: pump_exports,
       mpj: { open: mpjOpen, read: readMpj, loopAudio, song: mpjSong, bytes: mpjBytes },
       compose: { compose, composer, apply: applyComposed, now: composeNow },
+      mcp: mcpHandle,
       tpl: { TB, bytes: tbBytes, open: templateBuilderOpen, read: mpjRead },
       get S() {
         return S;
@@ -76818,6 +77693,7 @@ html.os-darwin.native-menu #menubar .mproj {
       () => requestAnimationFrame(() => {
         document.documentElement.classList.remove("boot");
         if (HOST && HOST.appReady) HOST.appReady();
+        initMcp();
         autoConnectAtLaunch();
       })
     );

@@ -327,6 +327,8 @@ app.whenReady().then(() => {
   session.defaultSession.setPermissionCheckHandler((wc, permission) => ok.has(permission));
   createWindow();
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
+  /* the MCP server (fork): an AI writes a song in the app and saves it to the MC-707's card (docs/MCP-SPEC.md) */
+  try { require('./main-mcp.cjs').start(() => win, folderFor); } catch (e) { console.error('MCP server not started: ' + e.message); }
 });
 
 app.on('window-all-closed', () => { app.quit(); });
